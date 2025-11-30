@@ -1,210 +1,1197 @@
 <!DOCTYPE html>
-<html lang="da">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chatbot with Upload</title>
+<title>Chatbot with Upload v2.0</title>
 
-<!-- Prism CSS -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
+<!-- Prism CSS - Dark Theme -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
 
-<!-- Prism JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+<!-- Custom Cisco Prism Theme -->
+<style id="cisco-prism-theme" disabled>
+    /* Cisco SecureCRT exact color matching from Kasper-Cisco Words for BlackBckgrd.ini */
+    code[class*="language-"],
+    pre[class*="language-"] {
+        color: #00ffff; /* Cyan default text - matches SecureCRT foreground */
+        background: #606060;
+    }
+    
+    /* Enable mode prompt (#) - Yellow #00ffff00 */
+    code[class*="language-"] .token.prompt-enable { color: #ffff00; font-weight: bold; }
+    
+    /* User mode prompt (>) - Light green #00d4ff7f */
+    code[class*="language-"] .token.prompt-user { color: #7fffd4; }
+    
+    /* Interface keyword and names - Orange #ff8800 like SecureCRT */
+    code[class*="language-"] .token.interface { color: #ff8800; }
+    code[class*="language-"] .token.class-name { color: #ff8800; }
+    
+    /* IP addresses - Green-yellow #007fff00 */
+    code[class*="language-"] .token.number { color: #00ff7f; }
+    
+    /* Subnet masks - Light cyan #002fffad */
+    code[class*="language-"] .token.subnet { color: #adff2f; }
+    
+    /* MAC addresses - Cyan #0000d7ff */
+    code[class*="language-"] .token.builtin { color: #ffd700; }
+    
+    /* IOS Version - Orange #00008cff */
+    code[class*="language-"] .token.version { color: #ff8c00; }
+    
+    /* Good words (yes, permit, up, running) - Green #0040ff00 */
+    code[class*="language-"] .token.inserted { color: #00ff40; }
+    
+    /* Bad words (no, deny, down, shutdown, trunk) - Red #000000ff */
+    code[class*="language-"] .token.deleted { color: #ff0000; }
+    code[class*="language-"] .token.keyword.bad { color: #ff0000; }
+    
+    /* Misc words (class, policy, version, ID) - Orange #0000a5ff */
+    code[class*="language-"] .token.property { color: #ffa500; }
+    
+    /* Important words (erase, delete, confirm) - Red bold #000000ff */
+    code[class*="language-"] .token.important { color: #ff0000; font-weight: bold; }
+    
+    /* Remarks and comments - Green #007fff00 */
+    code[class*="language-"] .token.comment { color: #00ff7f; }
+    
+    /* Keywords (interface, switchport, description) - Cyan (default) */
+    code[class*="language-"] .token.keyword { color: #00ffff; }
+    
+    /* Strings and descriptions - Cyan #0000d7ff */
+    code[class*="language-"] .token.string { color: #00d7ff; }
+    
+    /* Operators and punctuation - Cyan (default) */
+    code[class*="language-"] .token.operator { color: #00ffff; }
+    code[class*="language-"] .token.punctuation { color: #00ffff; }
+    
+    /* Functions - Cyan (default) */
+    code[class*="language-"] .token.function { color: #00ffff; }
+    
+    /* Access lists - Orange #00008cff */
+    code[class*="language-"] .token.acl { color: #ff8c00; }
+    
+    /* Username/password/key - Purple #00507fff */
+    code[class*="language-"] .token.credential { color: #ff7f50; }
+    
+    /* WWN - Purple #00507fff */
+    code[class*="language-"] .token.wwn { color: #ff7f50; }
+    
+    /* Outside - Green #0040ff00 */
+    code[class*="language-"] .token.outside { color: #00ff40; }
+    
+    /* Inside - Green #0000ff80 */
+    code[class*="language-"] .token.inside { color: #80ff00; }
+    
+    /* DMZ - Yellow-green #0000ff00 */
+    code[class*="language-"] .token.dmz { color: #00ff00; }
+    
+    /* Management - Gray-green #00acac53 */
+    code[class*="language-"] .token.mgmt { color: #53acac; }
+    
+    /* Hitcount zero - White */
+    code[class*="language-"] .token.hitcount-zero { color: #ffffff; }
+    
+    /* Hitcount active - Purple */
+    code[class*="language-"] .token.hitcount-active { color: #ff7f50; }
+    
+    /* Security (username/password lines) - Purple */
+    code[class*="language-"] .token.security { color: #ff7f50; }
+</style>
+
+<!-- Prism JS with AutoLoader -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" data-manual></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+<script>
+    // Configure autoloader path
+    Prism.plugins.autoloader.languages_path = 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/';
+    
+    // Custom Cisco IOS language definition
+    Prism.languages.cisco = {
+        'comment': {
+            pattern: /(?:!.*|remark\s+.*)/,
+            greedy: true
+        },
+        'prompt-enable': {
+            pattern: /^[\w.-]+#(?:\s|$)/m,
+            greedy: true
+        },
+        'prompt-user': {
+            pattern: /^[\w.-]+>(?:\s|$)/m,
+            greedy: true
+        },
+        'interface': {
+            pattern: /\b(?:Embedded-Service-Engine|GigabitEthernet|FastEthernet|TenGigabitEthernet|Ethernet|Serial|Tunnel|Loopback|Port-channel|Vlan|Multilink|Null|Nvi|vfc|Te|Gi|Fa|Eth?|Po)\d+(?:[\/.:]\d+)*[*]?\b/i,
+            greedy: true
+        },
+        'wwn': {
+            pattern: /\b(?:wwn|pwwn|(?:[a-f0-9]{2}:){7}[a-f0-9]{2})\b/i,
+            greedy: true,
+            alias: 'credential'
+        },
+        'ip-address': {
+            pattern: /\b(?:\d{1,3}\.){3}\d{1,3}(?:\/\d{1,2})?(?::\d{1,5})?\b/,
+            greedy: true,
+            alias: 'number'
+        },
+        'mac-address': {
+            pattern: /\b(?:[0-9a-f]{4}\.){2}[0-9a-f]{4}\b|\b(?:[0-9a-f]{2}[:-]){5}[0-9a-f]{2}\b/i,
+            greedy: true,
+            alias: 'builtin'
+        },
+        'ios-version': {
+            pattern: /\b\d+\.\d+(?:\.\d+)?(?:\([^)]+\))?[^\s,]*\b/,
+            greedy: true,
+            alias: 'version'
+        },
+        'serial-number': {
+            pattern: /\b[A-Z]{2,3}\d{4}[A-Z0-9]{4}\b/i,
+            greedy: true,
+            alias: 'version'
+        },
+        'important': {
+            pattern: /\b(?:erase|remove|delete|Building|configuration|reload|\[confirm\]|\(yes\/no\):?|--more--)\b/i,
+            greedy: true
+        },
+        'good-keyword': {
+            pattern: /\b(?:yes|permit|clear|\[OK\]|on|Full-duplex|cir|police|mgmt|Management|inside|1000000|1000Mb\/s|enabled|down->up|running|SUCCESS|success|up|passed|kasper|PASS|Active|Complete|GRE|ipsec)\b/i,
+            greedy: true,
+            alias: 'inserted'
+        },
+        'bad-keyword': {
+            pattern: /\b(?:no|administratively|shutdown?|never|deny|down|fail|invalid|reload|not|initializing|Off|1024|768|half-duplex|100Mb\/s|100000|des56?|telnet|err-disabled|disabled|up->down|trunk|exceeded|inhibit|_ERR:)\b/i,
+            greedy: true,
+            alias: 'deleted'
+        },
+        'security': {
+            pattern: /\b(?:username|password|key|enable\s+secret)\b.*$/m,
+            greedy: true,
+            alias: 'credential'
+        },
+        'acl': {
+            pattern: /\b(?:access-(?:list|class|group)|use-acl|prefix-list|time-range|object-group|route-map)\b/i,
+            greedy: true
+        },
+        'hitcount-zero': {
+            pattern: /\(hitcnt=0\)/,
+            greedy: true
+        },
+        'hitcount-active': {
+            pattern: /\(hitcnt=[1-9]\d*\)/,
+            greedy: true,
+            alias: 'credential'
+        },
+        'property': {
+            pattern: /\b(?:class|policy|service|parameter|match|version|PN|SN|S\/N|ID|PID|VID|NAME|DESCR|Device|Local|Intrfce|Holdtme|Capability|Platform|Port|Address|Interface|Hold|Uptime|SRTT|RTO|Seq|Neighbor|AS|MsgRcvd|MsgSent|TblVer|InQ|OutQ|Up\/Down|State|IP-Address|Method|OK\?|Status|Protocol|aaa|vlan|MTU|BW|DLY|bits\/sec|packets\/sec)[:,]?\b/i,
+            greedy: true
+        },
+        'keyword': {
+            pattern: /\b(?:interface|ip|ipv6|address|description|switchport|mode|access|trunk|encapsulation|dot1q|native|vlan|speed|duplex|spanning-tree|portfast|bpduguard|router|bgp|eigrp|ospf|route|static|default|gateway|line|vty|console|con|aux|enable|secret|password|service|hostname|banner|motd|aaa|authentication|authorization|accounting|snmp-server|ntp|clock|timezone|logging|permit|deny|any|host|established|log)\b/i,
+            greedy: true
+        },
+        'string': {
+            pattern: /(["'])(?:\\.|(?!\1)[^\\\r\n])*\1/,
+            greedy: true
+        },
+        'number': {
+            pattern: /\b\d+\b/,
+            greedy: true
+        },
+        'punctuation': /[{}[\];(),.:]/
+    };
+</script>
 
 <style>
-body { font-family: Arial, sans-serif; background:#f4f4f4; padding:20px; display:flex; justify-content:center; min-height:100vh; margin:0; }
-#chat-container { width:90%; max-width:900px; background:white; border-radius:10px; display:flex; flex-direction:column; box-shadow:0 2px 10px rgba(0,0,0,0.1); }
-#chat { padding:15px; max-height:70vh; overflow-y:auto; display:flex; flex-direction:column; }
-.message { margin:8px 0; padding:10px 14px; border-radius:10px; max-width:80%; word-wrap:break-word; line-height:1.4; }
-.user { align-self:flex-end; background:#d0e7ff; color:#004080; }
-.assistant { align-self:flex-start; background:#e8e8e8; color:#333; }
+        :root {
+            /* VS Code Dark (default) */
+            --bg-darkest: #1e1e1e;
+            --bg-dark: #252526;
+            --bg-medium: #2d2d30;
+            --border-color: #3e3e42;
+            --text-primary: #cccccc;
+            --text-secondary: #6a6a6a;
+            --accent-primary: #4ec9b0;
+            --accent-secondary: #ce9178;
+            --button-primary: #0e639c;
+            --button-primary-hover: #1177bb;
+            --button-secondary: #4ec9b0;
+            --scrollbar-thumb: #424242;
+            --scrollbar-thumb-hover: #4e4e4e;
+        }
 
-.codeblock { background:#f5f5f5; padding:10px; border-left:3px solid #007bff; border-radius:5px; margin:8px 0; position:relative; max-width:90%; align-self:flex-start; }
-.codeblock pre { margin:0; overflow-x:auto; }
-.codeblock code { font-family:'Courier New', monospace; font-size:14px; }
+        body {
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            background: var(--bg-darkest);
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
 
-.copy-btn { position:absolute; top:5px; right:5px; background:#007bff; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-size:12px; z-index:10; }
-.copy-btn:hover { background:#0056b3; }
+        #theme-selector {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 100;
+        }
 
-.copy-feedback { position:absolute; top:5px; right:70px; background:#28a745; color:white; border-radius:3px; padding:4px 8px; font-size:12px; opacity:0; transition:opacity 0.3s; z-index:10; }
-.copy-feedback.show { opacity:1; }
+        #theme-selector select {
+            padding: 8px 12px;
+            background: var(--bg-medium);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 14px;
+            cursor: pointer;
+            outline: none;
+        }
 
-#input-container { display:flex; flex-direction:column; padding:10px; border-top:1px solid #ddd; }
-#input-row { display:flex; width:100%; margin-bottom:5px; }
-textarea { flex:1; padding:10px; font-size:16px; resize:vertical; min-height:60px; border:1px solid #ddd; border-radius:4px; }
-button { margin-left:8px; padding:10px 18px; font-size:16px; background:#007bff; color:white; border:none; border-radius:4px; cursor:pointer; }
-button:hover { background-color:#0056b3; }
-input[type="file"] { margin-top:5px; }
-img.screenshot { max-width:100%; border-radius:5px; margin:5px 0; }
-</style>
+        #theme-selector select:hover {
+            background: var(--bg-dark);
+        }
+
+        #chat-container {
+            width: 100%;
+            height: 100vh;
+            background: var(--bg-dark);
+            position: relative;
+        }
+
+        #input-panel {
+            position: absolute;
+            right: calc(50% + 400px);
+            top: 0;
+            bottom: 0;
+            left: 0;
+            min-width: 300px;
+            display: none;
+            flex-direction: column;
+            border-right: 2px solid var(--border-color);
+            background: var(--bg-darkest);
+            overflow: hidden;
+        }
+
+        #input-panel.visible {
+            display: flex;
+        }
+
+        #pasted-code-header {
+            padding: 10px 15px;
+            background: var(--bg-medium);
+            border-bottom: 1px solid var(--border-color);
+            font-weight: bold;
+            color: var(--accent-primary);
+            letter-spacing: 0.5px;
+        }
+
+        #pasted-code-output {
+            padding: 10px;
+            overflow: auto;
+            overflow-x: scroll;
+            overflow-y: scroll;
+            flex-grow: 1;
+            font-size: 13px;
+            background: var(--bg-darkest);
+        }
+
+        #left-panel {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            transform: translateX(-50%);
+            width: 800px;
+            min-width: 400px;
+            display: flex;
+            flex-direction: column;
+            border-left: 2px solid var(--border-color);
+            border-right: 2px solid var(--border-color);
+            background: var(--bg-dark);
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        #chat {
+            padding: 15px;
+            overflow-x: scroll;
+            overflow-y: scroll;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            flex-grow: 1;
+            background: var(--bg-dark);
+        }
+
+        #right-panel {
+            position: absolute;
+            left: calc(50% + 400px);
+            top: 0;
+            bottom: 0;
+            right: 0;
+            min-width: 300px;
+            display: none;
+            flex-direction: column;
+            background: var(--bg-darkest);
+            overflow: hidden;
+        }
+
+        #right-panel.visible {
+            display: flex;
+        }
+
+        #code-output {
+            padding: 15px;
+            overflow-x: scroll;
+            overflow-y: scroll;
+            flex-grow: 1;
+            background: var(--bg-darkest);
+        }
+
+        #code-output-header {
+            padding: 10px 15px;
+            background: var(--bg-medium);
+            border-bottom: 1px solid var(--border-color);
+            font-weight: bold;
+            color: var(--accent-secondary);
+            letter-spacing: 0.5px;
+        }
+
+        .message {
+            margin: 8px 0;
+            padding: 10px 14px;
+            border-radius: 10px;
+            max-width: 80%;
+            word-wrap: break-word;
+            line-height: 1.4;
+        }
+
+        .user {
+            align-self: flex-end;
+            background: var(--button-primary);
+            color: #ffffff;
+        }
+
+        .assistant {
+            align-self: flex-start;
+            background: var(--bg-medium);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .code-indicator {
+            display: inline-block;
+            background: var(--button-primary);
+            color: #ffffff;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            margin-left: 8px;
+            cursor: pointer;
+            border: 1px solid var(--button-primary-hover);
+        }
+
+        .code-indicator:hover {
+            background: var(--button-primary-hover);
+            border-color: var(--button-primary-hover);
+        }
+
+        .codeblock {
+            background: var(--bg-darkest);
+            padding: 10px;
+            border-left: 3px solid var(--accent-primary);
+            border-radius: 5px;
+            margin: 8px 0;
+            position: relative;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--border-color);
+        }
+
+        .codeblock pre {
+            margin: 0;
+            overflow-x: scroll !important;
+            overflow-y: auto;
+            position: relative;
+            padding-top: 35px;
+            white-space: pre;
+            flex: 1;
+        }
+
+        .codeblock code {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            white-space: pre;
+            display: block;
+            min-width: max-content;
+        }
+
+        .copy-btn {
+            position: sticky;
+            top: 10px;
+            float: right;
+            background: var(--button-primary);
+            color: white;
+            border: 1px solid var(--button-primary-hover);
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            z-index: 10;
+            margin-bottom: -30px;
+        }
+
+        .copy-btn:hover {
+            background: var(--button-primary-hover);
+            border-color: var(--button-primary-hover);
+        }
+
+        .copy-feedback {
+            position: sticky;
+            top: 10px;
+            float: right;
+            background: var(--accent-primary);
+            color: var(--bg-darkest);
+            border-radius: 3px;
+            padding: 4px 8px;
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 10;
+            margin-right: 5px;
+            margin-bottom: -30px;
+            font-weight: bold;
+        }
+
+        .copy-feedback.show {
+            opacity: 1;
+        }
+
+        #input-container {
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+            border-top: 1px solid var(--border-color);
+            background: var(--bg-medium);
+            border-radius: 0 0 10px 10px;
+        }
+
+        #input-row {
+            display: flex;
+            width: 100%;
+            margin-bottom: 5px;
+        }
+
+        textarea {
+            flex: 1;
+            padding: 10px;
+            font-size: 16px;
+            resize: vertical;
+            min-height: 60px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background: var(--bg-darkest);
+            color: var(--text-primary);
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+        }
+
+        textarea::placeholder {
+            color: var(--text-secondary);
+        }
+
+        button {
+            margin-left: 8px;
+            padding: 10px 18px;
+            font-size: 16px;
+            background: var(--button-primary);
+            color: white;
+            border: 1px solid var(--button-primary-hover);
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+        }
+
+        button:hover {
+            background-color: var(--button-primary-hover);
+            border-color: var(--button-primary-hover);
+        }
+
+        input[type="file"] {
+            margin-top: 5px;
+        }
+
+        img.screenshot {
+            max-width: 100%;
+            border-radius: 5px;
+            margin: 5px 0;
+        }
+
+        #uploadBtn {
+            background-color: var(--button-secondary);
+            color: var(--bg-darkest);
+            margin-top: 5px;
+            border-color: var(--button-secondary);
+            font-weight: bold;
+        }
+
+        #uploadBtn:hover {
+            background-color: var(--accent-primary);
+            border-color: var(--accent-primary);
+        }
+
+        /* Larger, more visible scrollbars */
+        ::-webkit-scrollbar {
+            width: 16px;
+            height: 16px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-darkest);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--scrollbar-thumb);
+            border-radius: 10px;
+            border: 3px solid var(--bg-darkest);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--scrollbar-thumb-hover);
+        }
+    </style>
 </head>
 <body>
 
 <div id="chat-container">
-    <div id="chat"></div>
-    <div id="input-container">
-        <div id="input-row">
-            <textarea id="input" placeholder="Type..." rows="3"></textarea>
-            <button id="send">Send</button>
+    <div id="theme-selector">
+        <select id="theme-dropdown">
+            <option value="vscode">VS Code Dark</option>
+            <option value="monokai">Monokai</option>
+            <option value="dracula">Dracula</option>
+            <option value="nord">Nord</option>
+            <option value="solarized">Solarized Dark</option>
+            <option value="cisco">Cisco</option>
+        </select>
+    </div>
+    <div id="input-panel">
+        <div id="pasted-code-header">Pasted Code</div>
+        <div id="pasted-code-output"></div>
+    </div>
+    <div id="left-panel">
+        <div id="chat"></div>
+        <div id="input-container">
+            <div id="input-row">
+                <textarea id="input" placeholder="Type..." rows="3"></textarea>
+                <button id="send">Send</button>
+            </div>
+            <input type="file" id="upload" accept="image/*">
+            <button id="uploadBtn">Upload screenshot</button>
         </div>
-        <input type="file" id="upload" accept="image/*">
-        <button id="uploadBtn">Upload screenshot</button>
+    </div>
+    <div id="right-panel">
+        <div id="code-output-header">Code Output</div>
+        <div id="code-output"></div>
     </div>
 </div>
 
 <script>
-const chat = document.getElementById("chat");
-const input = document.getElementById("input");
-const send = document.getElementById("send");
-const upload = document.getElementById("upload");
-const uploadBtn = document.getElementById("uploadBtn");
+        const chat = document.getElementById("chat");
+        const codeOutput = document.getElementById("code-output");
+        const pastedCodeOutput = document.getElementById("pasted-code-output");
+        const input = document.getElementById("input");
+        const send = document.getElementById("send");
+        const upload = document.getElementById("upload");
+        const uploadBtn = document.getElementById("uploadBtn");
+        const themeDropdown = document.getElementById("theme-dropdown");
+        let codeBlockCounter = 0;
+        let pastedCodeCounter = 0;
 
-function escapeHtml(text){
-    return text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
-}
-
-// Normalize newlines to prevent mixed CRLF/LF issues
-function normalizeNewlines(src){
-    return src.replace(/\r\n?/g, "\n");
-}
-
-function parseMessage(text){
-    // State-machine parser that only treats fences at line start as delimiters
-    const blocks=[];
-    const src = normalizeNewlines(text);
-    const lines = src.split('\n');
-    let inCode = false; let lang = 'plaintext'; let codeLines = []; let textBuffer = [];
-
-    function flushText(){
-        if(textBuffer.length){
-            const t = textBuffer.join('\n').trim();
-            if(t) blocks.push({type:'text', content:t});
-            textBuffer = [];
-        }
-    }
-    function flushCode(){
-        if(codeLines.length){
-            blocks.push({type:'code', language:lang||'plaintext', content:codeLines.join('\n')});
-            codeLines = []; lang = 'plaintext';
-        }
-    }
-
-    for(let i=0;i<lines.length;i++){
-        const line = lines[i];
-        const fenceMatch = line.match(/^\s*```\s*(.*)$/); // only consider fences at line start
-        if(fenceMatch){
-            if(!inCode){
-                // opening fence
-                flushText();
-                lang = (fenceMatch[1]||'').trim();
-                inCode = true;
-            } else {
-                // closing fence
-                flushCode();
-                inCode = false;
+        // Theme definitions
+        const themes = {
+            vscode: {
+                '--bg-darkest': '#1e1e1e',
+                '--bg-dark': '#252526',
+                '--bg-medium': '#2d2d30',
+                '--border-color': '#3e3e42',
+                '--text-primary': '#cccccc',
+                '--text-secondary': '#6a6a6a',
+                '--accent-primary': '#4ec9b0',
+                '--accent-secondary': '#ce9178',
+                '--button-primary': '#0e639c',
+                '--button-primary-hover': '#1177bb',
+                '--button-secondary': '#4ec9b0',
+                '--scrollbar-thumb': '#424242',
+                '--scrollbar-thumb-hover': '#4e4e4e',
+                prismTheme: 'tomorrow'
+            },
+            monokai: {
+                '--bg-darkest': '#1e1e1e',
+                '--bg-dark': '#272822',
+                '--bg-medium': '#3e3d32',
+                '--border-color': '#49483e',
+                '--text-primary': '#f8f8f2',
+                '--text-secondary': '#75715e',
+                '--accent-primary': '#a6e22e',
+                '--accent-secondary': '#f92672',
+                '--button-primary': '#ae81ff',
+                '--button-primary-hover': '#c49dff',
+                '--button-secondary': '#a6e22e',
+                '--scrollbar-thumb': '#49483e',
+                '--scrollbar-thumb-hover': '#5a5950',
+                prismTheme: 'okaidia'
+            },
+            dracula: {
+                '--bg-darkest': '#21222c',
+                '--bg-dark': '#282a36',
+                '--bg-medium': '#343746',
+                '--border-color': '#44475a',
+                '--text-primary': '#f8f8f2',
+                '--text-secondary': '#6272a4',
+                '--accent-primary': '#8be9fd',
+                '--accent-secondary': '#ff79c6',
+                '--button-primary': '#bd93f9',
+                '--button-primary-hover': '#caa7ff',
+                '--button-secondary': '#50fa7b',
+                '--scrollbar-thumb': '#44475a',
+                '--scrollbar-thumb-hover': '#565869',
+                prismTheme: 'dracula'
+            },
+            nord: {
+                '--bg-darkest': '#2e3440',
+                '--bg-dark': '#3b4252',
+                '--bg-medium': '#434c5e',
+                '--border-color': '#4c566a',
+                '--text-primary': '#eceff4',
+                '--text-secondary': '#616e88',
+                '--accent-primary': '#88c0d0',
+                '--accent-secondary': '#d08770',
+                '--button-primary': '#5e81ac',
+                '--button-primary-hover': '#81a1c1',
+                '--button-secondary': '#a3be8c',
+                '--scrollbar-thumb': '#4c566a',
+                '--scrollbar-thumb-hover': '#5a6680',
+                prismTheme: 'nord'
+            },
+            solarized: {
+                '--bg-darkest': '#002b36',
+                '--bg-dark': '#073642',
+                '--bg-medium': '#094656',
+                '--border-color': '#0d5766',
+                '--text-primary': '#839496',
+                '--text-secondary': '#586e75',
+                '--accent-primary': '#2aa198',
+                '--accent-secondary': '#cb4b16',
+                '--button-primary': '#268bd2',
+                '--button-primary-hover': '#3a9ce3',
+                '--button-secondary': '#859900',
+                '--scrollbar-thumb': '#0d5766',
+                '--scrollbar-thumb-hover': '#11697a',
+                prismTheme: 'solarizedlight'
+            },
+            cisco: {
+                '--bg-darkest': '#606060',
+                '--bg-dark': '#606060',
+                '--bg-medium': '#707070',
+                '--border-color': '#808080',
+                '--text-primary': '#00ffff',
+                '--text-secondary': '#00d7ff',
+                '--accent-primary': '#00ffff',
+                '--accent-secondary': '#00d7ff',
+                '--button-primary': '#006b7a',
+                '--button-primary-hover': '#008a9c',
+                '--button-secondary': '#00ffff',
+                '--scrollbar-thumb': '#808080',
+                '--scrollbar-thumb-hover': '#909090',
+                prismTheme: 'tomorrow'
             }
-            continue;
-        }
-        if(inCode){
-            codeLines.push(line);
-        } else {
-            textBuffer.push(line);
-        }
-    }
-    // Flush any remaining content
-    if(inCode){
-        // Unclosed code fence: treat remaining as code
-        flushCode();
-    } else {
-        flushText();
-    }
-    return blocks;
-}
+        };
 
-function getPrismLanguage(lang){
-    const map={ html:'markup', xml:'markup', js:'javascript', py:'python', python:'python', cpp:'cpp', c:'c', java:'java', css:'css', json:'json', bash:'bash', sh:'bash', shell:'bash', sql:'sql', plaintext:'plaintext', text:'plaintext', '':'plaintext'};
-    return map[lang.toLowerCase()]||'plaintext';
-}
+        // Apply theme
+        function applyTheme(themeName) {
+            const theme = themes[themeName];
+            if (!theme) return;
+            
+            const root = document.documentElement;
+            Object.keys(theme).forEach(key => {
+                if (key !== 'prismTheme') {
+                    root.style.setProperty(key, theme[key]);
+                }
+            });
+            
+            // Update Prism theme or enable custom Cisco theme
+            const prismLink = document.querySelector('link[href*="prism"]');
+            const ciscoTheme = document.getElementById('cisco-prism-theme');
+            
+            if (themeName === 'cisco' && ciscoTheme) {
+                // Enable custom Cisco theme
+                if (prismLink) prismLink.disabled = true;
+                ciscoTheme.disabled = false;
+            } else {
+                // Use standard Prism theme
+                if (ciscoTheme) ciscoTheme.disabled = true;
+                if (prismLink) {
+                    prismLink.disabled = false;
+                    prismLink.href = `https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-${theme.prismTheme}.min.css`;
+                }
+            }
+            
+            // Re-highlight all code blocks
+            setTimeout(() => {
+                document.querySelectorAll('pre code').forEach(block => {
+                    if (typeof Prism !== 'undefined' && Prism.highlightElement) {
+                        Prism.highlightElement(block);
+                    }
+                });
+            }, 100);
+            
+            // Save preference
+            localStorage.setItem('chatbot-theme', themeName);
+        }
 
-function appendMessage(role, text, isImage=false){
-    if(!text || text.trim()==='') return;
-    const blocks = isImage ? [{type:'image', content:text}] : parseMessage(text);
-    blocks.forEach(block=>{
-        if(block.type==='text'){
-            const div=document.createElement('div');
-            div.className=`message ${role}`;
-            div.innerHTML=escapeHtml(block.content).replace(/\n/g,'<br>');
-            chat.appendChild(div);
-        } else if(block.type==='code'){
-            const wrapper=document.createElement('div'); wrapper.className='codeblock';
-            const pre=document.createElement('pre'); const code=document.createElement('code');
-            const prismLang = getPrismLanguage(block.language||'');
-            // Set language class on both <pre> and <code> (recommended by Prism)
+        // Load saved theme
+        const savedTheme = localStorage.getItem('chatbot-theme') || 'vscode';
+        themeDropdown.value = savedTheme;
+        applyTheme(savedTheme);
+
+        // Theme change event
+        themeDropdown.addEventListener('change', (e) => {
+            applyTheme(e.target.value);
+        });
+
+        function escapeHtml(text) {
+            return text.replace(/&/g, "&amp;")
+                       .replace(/</g, "&lt;")
+                       .replace(/>/g, "&gt;")
+                       .replace(/"/g, "&quot;")
+                       .replace(/'/g, "&#039;");
+        }
+
+        // Normalize newlines to prevent mixed CRLF/LF issues
+        function normalizeNewlines(src) {
+            return src.replace(/\r\n?/g, "\n");
+        }
+
+function parseMessage(text) {
+            // State-machine parser that only treats fences at line start as delimiters
+            const blocks = [];
+            const src = normalizeNewlines(text);
+            const lines = src.split('\n');
+            let inCode = false;
+            let lang = 'plaintext';
+            let codeLines = [];
+            let textBuffer = [];
+
+            function flushText() {
+                if (textBuffer.length) {
+                    const t = textBuffer.join('\n').trim();
+                    if (t) blocks.push({type: 'text', content: t});
+                    textBuffer = [];
+                }
+            }
+
+            function flushCode() {
+                if (codeLines.length) {
+                    blocks.push({type: 'code', language: lang || 'plaintext', content: codeLines.join('\n')});
+                    codeLines = [];
+                    lang = 'plaintext';
+                }
+            }
+
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i];
+                const fenceMatch = line.match(/^\s*```\s*(.*)$/); // only consider fences at line start
+                if (fenceMatch) {
+                    if (!inCode) {
+                        // opening fence
+                        flushText();
+                        lang = (fenceMatch[1] || '').trim();
+                        inCode = true;
+                    } else {
+                        // closing fence
+                        flushCode();
+                        inCode = false;
+                    }
+                    continue;
+                }
+                if (inCode) {
+                    codeLines.push(line);
+                } else {
+                    textBuffer.push(line);
+                }
+            }
+
+            // Flush any remaining content
+            if (inCode) {
+                // Unclosed code fence: treat remaining as code
+                flushCode();
+            } else {
+                flushText();
+            }
+
+            return blocks;
+        }
+
+function getPrismLanguage(lang) {
+            const map = {
+                html: 'markup',
+                xml: 'markup',
+                js: 'javascript',
+                py: 'python',
+                python: 'python',
+                cpp: 'cpp',
+                c: 'c',
+                java: 'java',
+                css: 'css',
+                json: 'json',
+                bash: 'bash',
+                sh: 'bash',
+                shell: 'bash',
+                sql: 'sql',
+                cisco: 'cisco',
+                ios: 'cisco',
+                plaintext: 'plaintext',
+                text: 'plaintext',
+                '': 'plaintext'
+            };
+            return map[lang.toLowerCase()] || 'plaintext';
+        }
+
+function appendMessage(role, text, isImage = false) {
+            if (!text || text.trim() === '') return;
+
+            const blocks = isImage ? [{type: 'image', content: text}] : parseMessage(text);
+
+            blocks.forEach(block => {
+                if (block.type === 'text') {
+                    const div = document.createElement('div');
+                    div.className = `message ${role}`;
+                    div.innerHTML = escapeHtml(block.content).replace(/\n/g, '<br>');
+                    chat.appendChild(div);
+                } else if (block.type === 'code') {
+                    // NEVER show code in chat - only show indicator
+                    codeBlockCounter++;
+                    
+                    const indicator = document.createElement('div');
+                    indicator.className = 'message assistant';
+                    const codeTag = document.createElement('span');
+                    codeTag.className = 'code-indicator';
+                    codeTag.textContent = `📝 Code #${codeBlockCounter}`;
+                    codeTag.onclick = () => {
+                        document.getElementById(`code-block-${codeBlockCounter}`).scrollIntoView({behavior: 'smooth'});
+                    };
+                    indicator.appendChild(document.createTextNode('Code output → '));
+                    indicator.appendChild(codeTag);
+                    chat.appendChild(indicator);
+
+                    // Add code block to right panel
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'codeblock';
+                    wrapper.id = `code-block-${codeBlockCounter}`;
+                    
+                    // Set max-height based on chat window height
+                    const chatHeight = chat.offsetHeight;
+                    wrapper.style.maxHeight = `${chatHeight}px`;
+
+                    const pre = document.createElement('pre');
+                    pre.style.maxHeight = `${chatHeight - 40}px`;
+                    const code = document.createElement('code');
+
+                    // Auto-detect Cisco if not specified or if plaintext
+                    let detectedLang = block.language || '';
+                    
+                    // Try Cisco detection even if bash/plaintext/text is specified (AI often uses wrong language)
+                    if (!detectedLang || detectedLang === 'plaintext' || detectedLang === 'text' || detectedLang === '' || detectedLang === 'bash' || detectedLang === 'shell') {
+                        const content = block.content.toLowerCase();
+                        
+                        // Force Cisco detection if content matches Cisco patterns
+                        if (content.match(/^[\w.-]+[#>]/m) || 
+                            content.includes('interface ') || 
+                            content.includes('switchport ') ||
+                            content.includes('ip address') ||
+                            content.includes('gigabitethernet') ||
+                            content.includes('fastethernet') ||
+                            content.includes('ethernet') ||
+                            (content.includes('vlan') && content.includes('!'))) {
+                            detectedLang = 'cisco';
+                        } else {
+                            // Keep original language if no Cisco patterns found
+                            detectedLang = detectedLang || 'plaintext';
+                        }
+                    }
+
+                    const prismLang = getPrismLanguage(detectedLang);
+                    
+                    pre.className = `language-${prismLang}`;
+                    code.className = `language-${prismLang}`;
+
+                    const safeContent = block.content.replace(/```/g, '``\\`');
+                    code.textContent = safeContent;
+
+                    const copyBtn = document.createElement('button');
+                    copyBtn.className = 'copy-btn';
+                    copyBtn.textContent = 'Copy';
+
+                    const feedback = document.createElement('div');
+                    feedback.className = 'copy-feedback';
+                    feedback.textContent = 'Copied!';
+
+                    copyBtn.addEventListener('click', () => {
+                        navigator.clipboard.writeText(block.content)
+                            .then(() => {
+                                feedback.classList.add('show');
+                                setTimeout(() => feedback.classList.remove('show'), 2000);
+                            });
+                    });
+
+                    pre.appendChild(copyBtn);
+                    pre.appendChild(feedback);
+                    pre.appendChild(code);
+                    wrapper.appendChild(pre);
+                    codeOutput.appendChild(wrapper);
+                    document.getElementById('right-panel').classList.add('visible');
+
+                    if (typeof Prism !== 'undefined' && Prism.highlightElement) {
+                        requestAnimationFrame(() => {
+                            try {
+                                Prism.highlightElement(code);
+                            } catch(e) { /* ignore */ }
+                        });
+                    }
+                } else if (block.type === 'image') {
+                    const img = document.createElement('img');
+                    img.className = 'screenshot';
+                    img.src = block.content;
+                    chat.appendChild(img);
+                }
+            });
+
+            // Scroll to bottom after adding new message
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+async function sendMessage() {
+            const msg = input.value.trim();
+            if (!msg) return;
+
+            // Check if message contains code block with backticks
+            const hasCodeBlock = msg.includes('```');
+            
+            // Also check if it's Cisco config without backticks (auto-detect)
+            const lowerMsg = msg.toLowerCase();
+            const isCiscoConfig = (msg.match(/^[\w.-]+[#>]/m) || 
+                                  lowerMsg.includes('interface ') || 
+                                  lowerMsg.includes('switchport ') ||
+                                  lowerMsg.includes('ip address') ||
+                                  (lowerMsg.includes('vlan') && msg.includes('!'))) &&
+                                  msg.split('\n').length > 3; // Multiple lines
+            
+            if (hasCodeBlock || isCiscoConfig) {
+                // Code already shown in left panel by input listener
+                // Add indicator to chat
+                appendMessage('user', '← Code Input');
+            } else {
+                // Normal text message
+                appendMessage('user', msg);
+            }
+            input.value = '';
+
+            try {
+                const res = await fetch('/chat', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({message: msg})
+                });
+
+                if (!res.ok) {
+                    throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+                }
+
+                const data = await res.json();
+                appendMessage('assistant', data.response);
+            } catch(err) {
+                appendMessage('assistant', 'Error connecting to server: ' + err.message);
+            }
+        }
+
+async function uploadScreenshotFile(file) {
+            const formData = new FormData();
+            formData.append('screendump', file);
+
+            appendMessage('user', '[Uploaded screenshot]');
+
+            try {
+                const res = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!res.ok) {
+                    throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+                }
+
+                const data = await res.json();
+                appendMessage('assistant', data.response);
+
+                const blobUrl = URL.createObjectURL(file);
+                appendMessage('assistant', blobUrl, true);
+            } catch(err) {
+                appendMessage('assistant', 'Upload error: ' + err.message);
+            }
+        }
+
+uploadBtn.onclick = () => {
+            if (upload.files.length) uploadScreenshotFile(upload.files[0]);
+        };
+
+        send.onclick = sendMessage;
+        input.addEventListener('keydown', e => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        // Capture all input and show in pasted code panel with auto language detection
+        input.addEventListener('input', e => {
+            const value = e.target.value.trim();
+            if (value.length > 20) { // Only show if more than 20 chars
+                // Auto-detect language from content
+                let detectedLang = 'javascript'; // Default to JS for most code
+                
+                // Check for ACTUAL code fences at line start, not just backticks anywhere
+                const hasCodeFence = /^\s*```/m.test(value);
+                
+                if (hasCodeFence) {
+                    // If it has code fences, parse and use the language
+                    const blocks = parseMessage(value);
+                    if (blocks.length > 0 && blocks[0].type === 'code') {
+                        detectedLang = blocks[0].language || 'javascript';
+                    }
+                } else {
+                    // Better language detection - check in order (most specific first)
+                    const lowerValue = value.toLowerCase();
+                    
+                    // Check for Cisco IOS config
+                    if (value.match(/^[\w-]+[#>]/m) || 
+                        lowerValue.includes('interface ') || 
+                        lowerValue.includes('switchport ') ||
+                        lowerValue.includes('ip address') ||
+                        lowerValue.includes('gigabitethernet') ||
+                        lowerValue.includes('fastethernet') ||
+                        (lowerValue.includes('vlan') && lowerValue.includes('!'))) {
+                        detectedLang = 'cisco';
+                    }
+                    // Check HTML first - very specific tags
+                    else if (lowerValue.includes('<!doctype') || lowerValue.includes('<html') || lowerValue.includes('<head') || lowerValue.includes('</html>')) {
+                        detectedLang = 'html';
+                    } else if (value.match(/[#\.]\w+\s*\{/) || (value.includes('{') && value.includes('}') && value.includes(':') && value.includes(';'))) {
+                        detectedLang = 'css';
+                    } else if ((value.includes('def ') && value.includes(':')) || (value.includes('import ') && !value.includes('import {')) || value.includes('print(') || value.includes('self.')) {
+                        detectedLang = 'python';
+                    } else if (value.includes('SELECT ') || value.includes('INSERT INTO') || value.includes('CREATE TABLE')) {
+                        detectedLang = 'sql';
+                    }
+                }
+                
+                // Clear and update preview
+                pastedCodeOutput.innerHTML = '';
+                pastedCodeCounter = 1;
+                addPastedCode(value, detectedLang, pastedCodeCounter);
+                document.getElementById('input-panel').classList.add('visible');
+            } else if (value.length === 0) {
+                pastedCodeOutput.innerHTML = '';
+                document.getElementById('input-panel').classList.remove('visible');
+            }
+        });
+
+        function addPastedCode(content, language, counter) {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'codeblock';
+            wrapper.id = `pasted-code-${counter}`;
+            wrapper.style.marginBottom = '15px';
+            
+            // Set max-height based on chat window height
+            const chatHeight = chat.offsetHeight;
+            wrapper.style.maxHeight = `${chatHeight}px`;
+
+            const header = document.createElement('div');
+            header.style.fontSize = '11px';
+            header.style.color = '#666';
+            header.style.marginBottom = '5px';
+            header.textContent = `#${counter} (${language || 'plaintext'})`;
+
+            const pre = document.createElement('pre');
+            pre.style.maxHeight = `${chatHeight - 40}px`;
+            const code = document.createElement('code');
+
+            const prismLang = getPrismLanguage(language || '');
             pre.className = `language-${prismLang}`;
             code.className = `language-${prismLang}`;
-            // Escape internal triple backticks for display to avoid premature closures
-            const safeContent = block.content.replace(/```/g, '``\\`');
-            code.textContent = safeContent;
-            const copyBtn=document.createElement('button'); copyBtn.className='copy-btn'; copyBtn.textContent='Copy';
-            const feedback=document.createElement('div'); feedback.className='copy-feedback'; feedback.textContent='Copied!';
-            // Copy original content (unmodified)
-            copyBtn.addEventListener('click',()=>{ navigator.clipboard.writeText(block.content).then(()=>{ feedback.classList.add('show'); setTimeout(()=>feedback.classList.remove('show'),2000); }); });
-            pre.appendChild(code); wrapper.appendChild(pre); wrapper.appendChild(copyBtn); wrapper.appendChild(feedback); chat.appendChild(wrapper);
-            // Ensure Prism highlights the element after it's in the DOM.
-            if(typeof Prism!=='undefined' && Prism.highlightElement){
-                requestAnimationFrame(()=>{
-                    try{ Prism.highlightElement(code); }catch(e){ /* ignore highlight errors */ }
+            code.textContent = content;
+
+            const copyBtn = document.createElement('button');
+            copyBtn.className = 'copy-btn';
+            copyBtn.textContent = 'Copy';
+
+            const feedback = document.createElement('div');
+            feedback.className = 'copy-feedback';
+            feedback.textContent = 'Copied!';
+
+            copyBtn.addEventListener('click', () => {
+                navigator.clipboard.writeText(content)
+                    .then(() => {
+                        feedback.classList.add('show');
+                        setTimeout(() => feedback.classList.remove('show'), 2000);
+                    });
+            });
+
+            pre.appendChild(copyBtn);
+            pre.appendChild(feedback);
+            pre.appendChild(code);
+            wrapper.appendChild(header);
+            wrapper.appendChild(pre);
+            pastedCodeOutput.appendChild(wrapper);
+
+            // Use same highlighting method as right panel for consistency
+            if (typeof Prism !== 'undefined' && Prism.highlightElement) {
+                requestAnimationFrame(() => {
+                    try {
+                        Prism.highlightElement(code);
+                    } catch(e) { /* ignore */ }
                 });
             }
-        } else if(block.type==='image'){
-            const img=document.createElement('img'); img.className='screenshot'; img.src=block.content; chat.appendChild(img);
+
+            pastedCodeOutput.scrollTop = pastedCodeOutput.scrollHeight;
         }
-    });
-    chat.scrollTop=chat.scrollHeight;
-}
 
-async function sendMessage(){
-    const msg=input.value.trim(); if(!msg) return; appendMessage('user',msg); input.value='';
-    try{
-        const res=await fetch('/chat',{method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({message:msg})});
-        const data=await res.json();
-        appendMessage('assistant', data.response);
-    } catch(err){ appendMessage('assistant','Error connecting to server: '+err.message); }
-}
+        // Paste from clipboard
+        document.addEventListener('paste', e => {
+            const items = e.clipboardData.items;
+            for (let item of items) {
+                if (item.type.indexOf('image') !== -1) {
+                    const file = item.getAsFile();
+                    uploadScreenshotFile(file);
+                }
+            }
+        });
 
-async function uploadScreenshotFile(file){
-    const formData=new FormData(); formData.append('screendump', file);
-    appendMessage('user','[Uploaded screenshot]');
-    try{
-        const res=await fetch('/upload',{method:'POST', body:formData});
-        const data=await res.json();
-        appendMessage('assistant', data.response);
-        const blobUrl=URL.createObjectURL(file);
-        appendMessage('assistant', blobUrl,true);
-    } catch(err){ appendMessage('assistant','Upload error: '+err.message); }
-}
+        input.focus();
 
-uploadBtn.onclick=()=>{ if(upload.files.length) uploadScreenshotFile(upload.files[0]); }
-send.onclick=sendMessage;
-input.addEventListener('keydown', e=>{ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); sendMessage(); } });
-input.focus();
-
-// Paste fra clipboard
-document.addEventListener('paste', e=>{
-    const items=e.clipboardData.items;
-    for(let item of items){
-        if(item.type.indexOf('image')!==-1){
-            const file=item.getAsFile();
-            uploadScreenshotFile(file);
-        }
-    }
-});
-</script>
+        // Update code block heights when window resizes
+        window.addEventListener('resize', () => {
+            const chatHeight = chat.offsetHeight;
+            document.querySelectorAll('.codeblock').forEach(block => {
+                block.style.maxHeight = `${chatHeight}px`;
+                const pre = block.querySelector('pre');
+                if (pre) {
+                    pre.style.maxHeight = `${chatHeight - 40}px`;
+                }
+            });
+        });
+    </script>
 </body>
 </html>

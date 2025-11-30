@@ -46,11 +46,16 @@ def chat():
     if not user_msg:
         return jsonify({"response": "No message sent."})
     
+    # Truncate very long messages to prevent token overflow (max 10000 chars)
+    if len(user_msg) > 10000:
+        user_msg = user_msg[:10000] + "\n... [truncated - message too long]"
+    
     # Save user message WITHOUT HTML-escaping
     cursor.execute("INSERT INTO messages (role, content) VALUES (?, ?)", ("user", user_msg))
     conn.commit()
     
-    cursor.execute("SELECT role, content FROM messages ORDER BY id DESC LIMIT 50")
+    # Only keep last 20 messages to prevent token overflow
+    cursor.execute("SELECT role, content FROM messages ORDER BY id DESC LIMIT 20")
     history = [{"role": role, "content": content} for role, content in reversed(cursor.fetchall())]
     
     # Add system prompt to ensure proper code formatting
