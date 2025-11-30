@@ -2,6 +2,8 @@
 
 Flask-based chatbot with Mistral AI, code highlighting and upload functionality.
 
+**Platform:** Developed and tested on Raspberry Pi 5 (Kali Linux), compatible with Ubuntu and other Linux distributions.
+
 ## Features
 - Chat with Mistral AI (mistral-small-latest)
 - Syntax highlighting via Prism.js
@@ -34,6 +36,11 @@ openssl req -x509 -newkey rsa:4096 -nodes -out cert.pem -keyout key.pem -days 36
 ```
 
 ## Running
+
+### Quick start (Linux):
+```bash
+./start.sh
+```
 
 ### As systemd service:
 ```bash
