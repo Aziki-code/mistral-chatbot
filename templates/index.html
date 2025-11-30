@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chatbot with Upload</title>
+
+<!-- Prism CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
+
+<!-- Prism JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+
+<style>
+body { font-family: Arial, sans-serif; background:#f4f4f4; padding:20px; display:flex; justify-content:center; min-height:100vh; margin:0; }
+#chat-container { width:90%; max-width:900px; background:white; border-radius:10px; display:flex; flex-direction:column; box-shadow:0 2px 10px rgba(0,0,0,0.1); }
+#chat { padding:15px; max-height:70vh; overflow-y:auto; display:flex; flex-direction:column; }
+.message { margin:8px 0; padding:10px 14px; border-radius:10px; max-width:80%; word-wrap:break-word; line-height:1.4; }
+.user { align-self:flex-end; background:#d0e7ff; color:#004080; }
+.assistant { align-self:flex-start; background:#e8e8e8; color:#333; }
+
+.codeblock { background:#f5f5f5; padding:10px; border-left:3px solid #007bff; border-radius:5px; margin:8px 0; position:relative; max-width:90%; align-self:flex-start; }
+.codeblock pre { margin:0; overflow-x:auto; }
+.codeblock code { font-family:'Courier New', monospace; font-size:14px; }
+
+.copy-btn { position:absolute; top:5px; right:5px; background:#007bff; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; font-size:12px; z-index:10; }
+.copy-btn:hover { background:#0056b3; }
+
+.copy-feedback { position:absolute; top:5px; right:70px; background:#28a745; color:white; border-radius:3px; padding:4px 8px; font-size:12px; opacity:0; transition:opacity 0.3s; z-index:10; }
+.copy-feedback.show { opacity:1; }
+
+#input-container { display:flex; flex-direction:column; padding:10px; border-top:1px solid #ddd; }
+#input-row { display:flex; width:100%; margin-bottom:5px; }
+textarea { flex:1; padding:10px; font-size:16px; resize:vertical; min-height:60px; border:1px solid #ddd; border-radius:4px; }
+button { margin-left:8px; padding:10px 18px; font-size:16px; background:#007bff; color:white; border:none; border-radius:4px; cursor:pointer; }
+button:hover { background-color:#0056b3; }
+input[type="file"] { margin-top:5px; }
+img.screenshot { max-width:100%; border-radius:5px; margin:5px 0; }
+</style>
+</head>
+<body>
+
+<div id="chat-container">
+    <div id="chat"></div>
+    <div id="input-container">
+        <div id="input-row">
+            <textarea id="input" placeholder="Type..." rows="3"></textarea>
+            <button id="send">Send</button>
+        </div>
+        <input type="file" id="upload" accept="image/*">
+        <button id="uploadBtn">Upload screenshot</button>
+    </div>
+</div>
+
+<script>
+const chat = document.getElementById("chat");
+const input = document.getElementById("input");
+const send = document.getElementById("send");
+const upload = document.getElementById("upload");
+const uploadBtn = document.getElementById("uploadBtn");
+
+function escapeHtml(text){
+    return text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
+}
+
+// Normalize newlines to prevent mixed CRLF/LF issues
+function normalizeNewlines(src){
+    return src.replace(/\r\n?/g, "\n");
+}
+
+function parseMessage(text){
+    // State-machine parser that only treats fences at line start as delimiters
+    const blocks=[];
+    const src = normalizeNewlines(text);
+    const lines = src.split('\n');
+    let inCode = false; let lang = 'plaintext'; let codeLines = []; let textBuffer = [];
+
+    function flushText(){
+        if(textBuffer.length){
+            const t = textBuffer.join('\n').trim();
+            if(t) blocks.push({type:'text', content:t});
+            textBuffer = [];
+        }
+    }
+    function flushCode(){
+        if(codeLines.length){
+            blocks.push({type:'code', language:lang||'plaintext', content:codeLines.join('\n')});
+            codeLines = []; lang = 'plaintext';
+        }
+    }
+
+    for(let i=0;i<lines.length;i++){
+        const line = lines[i];
+        const fenceMatch = line.match(/^\s*```\s*(.*)$/); // only consider fences at line start
+        if(fenceMatch){
+            if(!inCode){
+                // opening fence
+                flushText();
+                lang = (fenceMatch[1]||'').trim();
+                inCode = true;
+            } else {
+                // closing fence
+                flushCode();
+                inCode = false;
+            }
+            continue;
+        }
+        if(inCode){
+            codeLines.push(line);
+        } else {
+            textBuffer.push(line);
+        }
+    }
+    // Flush any remaining content
+    if(inCode){
+        // Unclosed code fence: treat remaining as code
+        flushCode();
+    } else {
+        flushText();
+    }
+    return blocks;
+}
+
+function getPrismLanguage(lang){
+    const map={ html:'markup', xml:'markup', js:'javascript', py:'python', python:'python', cpp:'cpp', c:'c', java:'java', css:'css', json:'json', bash:'bash', sh:'bash', shell:'bash', sql:'sql', plaintext:'plaintext', text:'plaintext', '':'plaintext'};
+    return map[lang.toLowerCase()]||'plaintext';
+}
+
+function appendMessage(role, text, isImage=false){
+    if(!text || text.trim()==='') return;
+    const blocks = isImage ? [{type:'image', content:text}] : parseMessage(text);
+    blocks.forEach(block=>{
+        if(block.type==='text'){
+            const div=document.createElement('div');
+            div.className=`message ${role}`;
+            div.innerHTML=escapeHtml(block.content).replace(/\n/g,'<br>');
+            chat.appendChild(div);
+        } else if(block.type==='code'){
+            const wrapper=document.createElement('div'); wrapper.className='codeblock';
+            const pre=document.createElement('pre'); const code=document.createElement('code');
+            const prismLang = getPrismLanguage(block.language||'');
+            // Set language class on both <pre> and <code> (recommended by Prism)
+            pre.className = `language-${prismLang}`;
+            code.className = `language-${prismLang}`;
+            // Escape internal triple backticks for display to avoid premature closures
+            const safeContent = block.content.replace(/```/g, '``\\`');
+            code.textContent = safeContent;
+            const copyBtn=document.createElement('button'); copyBtn.className='copy-btn'; copyBtn.textContent='Copy';
+            const feedback=document.createElement('div'); feedback.className='copy-feedback'; feedback.textContent='Copied!';
+            // Copy original content (unmodified)
+            copyBtn.addEventListener('click',()=>{ navigator.clipboard.writeText(block.content).then(()=>{ feedback.classList.add('show'); setTimeout(()=>feedback.classList.remove('show'),2000); }); });
+            pre.appendChild(code); wrapper.appendChild(pre); wrapper.appendChild(copyBtn); wrapper.appendChild(feedback); chat.appendChild(wrapper);
+            // Ensure Prism highlights the element after it's in the DOM.
+            if(typeof Prism!=='undefined' && Prism.highlightElement){
+                requestAnimationFrame(()=>{
+                    try{ Prism.highlightElement(code); }catch(e){ /* ignore highlight errors */ }
+                });
+            }
+        } else if(block.type==='image'){
+            const img=document.createElement('img'); img.className='screenshot'; img.src=block.content; chat.appendChild(img);
+        }
+    });
+    chat.scrollTop=chat.scrollHeight;
+}
+
+async function sendMessage(){
+    const msg=input.value.trim(); if(!msg) return; appendMessage('user',msg); input.value='';
+    try{
+        const res=await fetch('/chat',{method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({message:msg})});
+        const data=await res.json();
+        appendMessage('assistant', data.response);
+    } catch(err){ appendMessage('assistant','Error connecting to server: '+err.message); }
+}
+
+async function uploadScreenshotFile(file){
+    const formData=new FormData(); formData.append('screendump', file);
+    appendMessage('user','[Uploaded screenshot]');
+    try{
+        const res=await fetch('/upload',{method:'POST', body:formData});
+        const data=await res.json();
+        appendMessage('assistant', data.response);
+        const blobUrl=URL.createObjectURL(file);
+        appendMessage('assistant', blobUrl,true);
+    } catch(err){ appendMessage('assistant','Upload error: '+err.message); }
+}
+
+uploadBtn.onclick=()=>{ if(upload.files.length) uploadScreenshotFile(upload.files[0]); }
+send.onclick=sendMessage;
+input.addEventListener('keydown', e=>{ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); sendMessage(); } });
+input.focus();
+
+// Paste fra clipboard
+document.addEventListener('paste', e=>{
+    const items=e.clipboardData.items;
+    for(let item of items){
+        if(item.type.indexOf('image')!==-1){
+            const file=item.getAsFile();
+            uploadScreenshotFile(file);
+        }
+    }
+});
+</script>
+</body>
+</html>

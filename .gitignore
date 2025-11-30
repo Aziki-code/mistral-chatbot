@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+*.egg-info/
+dist/
+build/
+
+# Følsomme filer - SKAL IKKE til GitHub
+.env
+*.pem
+*.key
+cert.pem
+key.pem
+
+# Database og uploads
+chat_history.db
+static/uploads/*
+!static/uploads/.gitkeep
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS filer
+.DS_Store
+Thumbs.db
+*.log
+
+# Backup filer
+*.backup
+*~
