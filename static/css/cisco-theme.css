@@ -1,0 +1,88 @@
+/* Cisco SecureCRT exact color matching from Kasper-Cisco Words for BlackBckgrd.ini */
+
+code[class*="language-"],
+pre[class*="language-"] {
+    color: #00ffff; /* Cyan default text - matches SecureCRT foreground */
+    background: #606060;
+}
+
+/* Enable mode prompt (#) - Yellow #00ffff00 */
+code[class*="language-"] .token.prompt-enable { color: #ffff00; font-weight: bold; }
+
+/* User mode prompt (>) - Light green #00d4ff7f */
+code[class*="language-"] .token.prompt-user { color: #7fffd4; }
+
+/* Interface keyword and names - Orange #ff8800 like SecureCRT */
+code[class*="language-"] .token.interface { color: #ff8800; }
+code[class*="language-"] .token.class-name { color: #ff8800; }
+
+/* IP addresses - Green-yellow #007fff00 */
+code[class*="language-"] .token.number { color: #00ff7f; }
+
+/* Subnet masks - Light cyan #002fffad */
+code[class*="language-"] .token.subnet { color: #adff2f; }
+
+/* MAC addresses - Cyan #0000d7ff */
+code[class*="language-"] .token.builtin { color: #ffd700; }
+
+/* IOS Version - Orange #00008cff */
+code[class*="language-"] .token.version { color: #ff8c00; }
+
+/* Good words (yes, permit, up, running) - Green #0040ff00 */
+code[class*="language-"] .token.inserted { color: #00ff40; }
+
+/* Bad words (no, deny, down, shutdown, trunk) - Red #000000ff */
+code[class*="language-"] .token.deleted { color: #ff0000; }
+code[class*="language-"] .token.keyword.bad { color: #ff0000; }
+
+/* Misc words (class, policy, version, ID) - Orange #0000a5ff */
+code[class*="language-"] .token.property { color: #ffa500; }
+
+/* Important words (erase, delete, confirm) - Red bold #000000ff */
+code[class*="language-"] .token.important { color: #ff0000; font-weight: bold; }
+
+/* Remarks and comments - Green #007fff00 */
+code[class*="language-"] .token.comment { color: #00ff7f; }
+
+/* Keywords (interface, switchport, description) - Cyan (default) */
+code[class*="language-"] .token.keyword { color: #00ffff; }
+
+/* Strings and descriptions - Cyan #0000d7ff */
+code[class*="language-"] .token.string { color: #00d7ff; }
+
+/* Operators and punctuation - Cyan (default) */
+code[class*="language-"] .token.operator { color: #00ffff; }
+code[class*="language-"] .token.punctuation { color: #00ffff; }
+
+/* Functions - Cyan (default) */
+code[class*="language-"] .token.function { color: #00ffff; }
+
+/* Access lists - Orange #00008cff */
+code[class*="language-"] .token.acl { color: #ff8c00; }
+
+/* Username/password/key - Purple #00507fff */
+code[class*="language-"] .token.credential { color: #ff7f50; }
+
+/* WWN - Purple #00507fff */
+code[class*="language-"] .token.wwn { color: #ff7f50; }
+
+/* Outside - Green #0040ff00 */
+code[class*="language-"] .token.outside { color: #00ff40; }
+
+/* Inside - Green #0000ff80 */
+code[class*="language-"] .token.inside { color: #80ff00; }
+
+/* DMZ - Yellow-green #0000ff00 */
+code[class*="language-"] .token.dmz { color: #00ff00; }
+
+/* Management - Gray-green #00acac53 */
+code[class*="language-"] .token.mgmt { color: #53acac; }
+
+/* Hitcount zero - White */
+code[class*="language-"] .token.hitcount-zero { color: #ffffff; }
+
+/* Hitcount active - Purple */
+code[class*="language-"] .token.hitcount-active { color: #ff7f50; }
+
+/* Security (username/password lines) - Purple */
+code[class*="language-"] .token.security { color: #ff7f50; }
