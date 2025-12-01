@@ -5,7 +5,7 @@ from flask_ldap3_login import LDAP3LoginManager
 from flask_ldap3_login.forms import LDAPLoginForm
 from dotenv import load_dotenv
 # Import Bot Manager instead of individual clients
-from main import get_bot_manager
+from bot_manager import get_bot_manager
 import os
 import sqlite3
 
@@ -186,8 +186,14 @@ def chat():
     cursor.execute("INSERT INTO messages (role, content) VALUES (?, ?)", ("user", user_msg))
     conn.commit()
     
-    # Only keep last 20 messages to prevent token overflow
-    cursor.execute("SELECT role, content FROM messages ORDER BY id DESC LIMIT 20")
+    # Limit history based on AI model
+    # GitHub Models has smaller context window
+    if ai_model == "github-copilot":
+        history_limit = 6  # Only last 3 exchanges (6 messages)
+    else:
+        history_limit = 20  # Mistral can handle more
+    
+    cursor.execute("SELECT role, content FROM messages ORDER BY id DESC LIMIT ?", (history_limit,))
     history = [{"role": role, "content": content} for role, content in reversed(cursor.fetchall())]
     
     # Add system prompt to ensure proper code formatting

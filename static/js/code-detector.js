@@ -31,11 +31,22 @@ function getPrismLanguage(lang) {
 
 function detectCiscoConfig(value) {
     // Check for Cisco IOS config - ONLY if it looks like actual config (not description)
-    // Must have prompt at start of line AND config commands
-    const hasPrompt = value.match(/^[\w-]+[#>]\s/m);
-    const hasConfigCommands = value.match(/^(interface|switchport|ip address|router|crypto|access-list|!\s)/m);
+    // Must have prompt at start of line OR config commands
+    const hasPrompt = value.match(/^[\w.-]+[#>]\s/m);
+    const hasConfigCommands = value.match(/^(interface|switchport|ip address|router|crypto|access-list|!\s|vlan|hostname|enable|line vty|line console)/m);
     
-    return hasPrompt && hasConfigCommands;
+    // Also check for common Cisco patterns (case insensitive)
+    const lowerValue = value.toLowerCase();
+    const hasCiscoKeywords = (
+        lowerValue.includes('interface ') ||
+        lowerValue.includes('switchport ') ||
+        lowerValue.includes('ip address') ||
+        lowerValue.includes('gigabitethernet') ||
+        lowerValue.includes('fastethernet') ||
+        (lowerValue.includes('vlan') && value.includes('!'))
+    );
+    
+    return (hasPrompt && hasConfigCommands) || (hasConfigCommands && hasCiscoKeywords);
 }
 
 function detectLanguage(value) {

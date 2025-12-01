@@ -29,4 +29,4 @@ fi
 # Start the chatbot
 echo "Starting Mistral Chatbot..."
 echo "Access at: https://localhost:5000"
-python chatbot_sql.py
+python main.py

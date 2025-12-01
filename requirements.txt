@@ -1,0 +1,25 @@
+# AzikiAI Coding Bot - Python Dependencies
+# Install with: pip install -r requirements.txt
+
+# Core Web Framework
+flask==2.3.3
+werkzeug==2.3.7
+
+# Environment & Configuration
+python-dotenv==1.0.0
+
+# AI/ML APIs
+mistralai==0.0.12
+requests==2.31.0
+
+# Authentication & Security
+flask-login==0.6.3
+flask-ldap3-login==0.9.18
+ldap3==2.9.1
+
+# Database
+# SQLite is built into Python, no extra package needed
+
+# Optional but recommended
+# For production deployments
+gunicorn==21.2.0

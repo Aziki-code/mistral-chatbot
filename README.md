@@ -1,11 +1,14 @@
 # AzikiAI-codingbot
 
-Enterprise-grade AI coding assistant powered by Mistral AI with LDAP authentication, advanced code highlighting, and three-panel layout for optimal code review.
+Enterprise-grade AI coding assistant powered by **GitHub Copilot** or Mistral AI with LDAP authentication, advanced code highlighting, and three-panel layout for optimal code review.
 
 **Platform:** Developed and tested on Raspberry Pi 5 running Kali Linux 2025.4 (kali-rolling). Compatible with Ubuntu and other Linux distributions.
 
 ## Features
-- **Mistral AI Integration:** Chat with mistral-small-latest for intelligent code assistance
+- **🤖 Dual AI Support:** GitHub Copilot (primary) with Mistral AI fallback
+- **🔄 Dynamic AI Switching:** Choose between AI models in real-time via dropdown menu
+- **GitHub Copilot Integration:** Use your GitHub credentials for enterprise-grade AI assistance
+- **Mistral AI Integration:** Alternative AI backend with mistral-small-latest
 - **LDAP Authentication:** Secure Active Directory integration with session management
 - **Session Security:** Automatic logout after 10 minutes of inactivity
 - **Custom Cisco IOS syntax highlighting** with SecureCRT-matching colors
@@ -31,17 +34,34 @@ source venv/bin/activate
 
 3. Install dependencies:
 ```bash
-pip install flask python-dotenv mistralai flask-login flask-ldap3-login ldap3
+pip install flask python-dotenv requests mistralai flask-login flask-ldap3-login ldap3
 ```
 
 4. Create `.env` file with your configuration:
-```
-MISTRAL_API_KEY=your_api_key_here
+```bash
+# Option 1: Using GitHub Copilot (Recommended)
+GITHUB_TOKEN=your_github_personal_access_token
+SECRET_KEY=your_secret_key_here
+LDAP_HOST=your_ldap_server_ip
+LDAP_BASE_DN=DC=YourDomain,DC=local
+LDAP_USER_SEARCH_BASE=CN=Users,DC=YourDomain,DC=local
+
+# Option 2: Using Mistral AI (Fallback)
+# If GITHUB_TOKEN is not set, the bot will use Mistral AI
+MISTRAL_API_KEY=your_mistral_api_key_here
 SECRET_KEY=your_secret_key_here
 LDAP_HOST=your_ldap_server_ip
 LDAP_BASE_DN=DC=YourDomain,DC=local
 LDAP_USER_SEARCH_BASE=CN=Users,DC=YourDomain,DC=local
 ```
+
+**Getting GitHub Token:**
+1. Go to https://github.com/settings/tokens
+2. Click "Generate new token" → "Generate new token (classic)"
+3. Select scopes: `read:user` and if available `copilot`
+4. Copy the token to your `.env` file
+
+**Note:** You can use both tokens - the bot will prefer GitHub Copilot if available.
 
 5. Generate SSL certificates (optional):
 ```bash
@@ -62,12 +82,31 @@ sudo systemctl start mistral-chatbot
 
 ### Direct:
 ```bash
-python chatbot_sql.py
+python main.py
 ```
 
 Access at: `https://localhost:5000` or `https://[your-pi-ip]:5000`
 
 **Login:** Use your Active Directory credentials (username and password from configured LDAP domain)
+
+## Using the AI Model Selector
+
+After logging in, you'll see an **AI Model** dropdown in the top-left corner:
+
+- **🤖 Mistral AI** - Fast and efficient French AI model, great for general coding tasks
+- **💻 GitHub Copilot** - Powered by GPT-4, excellent for complex coding and debugging
+
+**Features:**
+- Switch between models anytime during your session
+- Your choice is remembered (saved in browser localStorage)
+- Only configured models appear in the dropdown
+- If only one model is configured, the dropdown is disabled
+- Visual notification when switching models
+
+**Tips:**
+- Use Mistral AI for quick responses and general questions
+- Use GitHub Copilot for advanced code generation and complex debugging
+- Both models support all features (code highlighting, Cisco syntax, etc.)
 
 ## Authentication
 - **LDAP/Active Directory integration** for secure user authentication
@@ -77,7 +116,11 @@ Access at: `https://localhost:5000` or `https://[your-pi-ip]:5000`
 - All routes require authentication except login page
 
 ## Structure
-- `chatbot_sql.py` - Flask server with Mistral AI integration, LDAP authentication, and message truncation
+- `main.py` - Flask server with GitHub Copilot/Mistral AI integration, LDAP authentication, and message truncation
+- `bot_manager.py` - Central bot manager that orchestrates all AI bots
+- `mistral_bot.py` - Mistral AI bot implementation
+- `github_copilot_bot.py` - GitHub Copilot bot implementation
+- `base_bot.py` - Abstract base class for all bots
 - `templates/index.html` - Main chatbot interface with three-panel layout
 - `templates/login.html` - LDAP login page
 - `static/js/session-timeout.js` - Auto-logout after inactivity

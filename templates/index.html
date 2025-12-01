@@ -23,6 +23,12 @@
 
 <div id="chat-container">
     <div id="theme-selector">
+        <label for="ai-model-dropdown" style="color: white; margin-right: 10px;">AI Model:</label>
+        <select id="ai-model-dropdown" style="margin-right: 20px;">
+            <option value="mistral">Mistral AI</option>
+            <option value="github-copilot">GitHub Copilot</option>
+        </select>
+        <label for="theme-dropdown" style="color: white; margin-right: 10px;">Theme:</label>
         <select id="theme-dropdown">
             <option value="cisco">Cisco</option>
             <option value="vscode">VS Code Dark</option>
@@ -65,6 +71,12 @@
 </script>
 
 <!-- Custom JavaScript Modules with cache busting -->
+<script>
+    // Set available AI models based on backend configuration
+    window.mistralAvailable = {{ mistral_available|lower }};
+    window.githubAvailable = {{ github_available|lower }};
+    window.defaultProvider = "{{ default_provider }}";
+</script>
 <script src="/static/js/prism-cisco.js?v=2.2"></script>
 <script src="/static/js/code-detector.js?v=2.2"></script>
 <script src="/static/js/message-parser.js?v=2.2"></script>
@@ -72,6 +84,7 @@
 <script src="/static/js/message-handler.js?v=2.2"></script>
 <script src="/static/js/ui-handlers.js?v=2.2"></script>
 <script src="/static/js/session-timeout.js?v=2.2"></script>
+<script src="/static/js/ai-selector.js?v=2.2"></script>
 
 </body>
 </html>

@@ -137,11 +137,18 @@ async function sendMessage() {
     }
     input.value = '';
 
+    // Get selected AI model
+    const aiModelDropdown = document.getElementById('ai-model-dropdown');
+    const selectedModel = aiModelDropdown ? aiModelDropdown.value : 'mistral';
+
     try {
         const res = await fetch('/chat', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({message: msg})
+            body: JSON.stringify({
+                message: msg,
+                ai_model: selectedModel
+            })
         });
 
         if (!res.ok) {
