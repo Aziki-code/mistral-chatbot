@@ -46,9 +46,11 @@ def chat():
     if not user_msg:
         return jsonify({"response": "No message sent."})
     
-    # Truncate very long messages to prevent token overflow (max 10000 chars)
-    if len(user_msg) > 10000:
-        user_msg = user_msg[:10000] + "\n... [truncated - message too long]"
+    # Warn if message is very long but allow up to 100k chars (Mistral can handle ~32k tokens)
+    truncated = False
+    if len(user_msg) > 100000:
+        user_msg = user_msg[:100000]
+        truncated = True
     
     # Save user message WITHOUT HTML-escaping
     cursor.execute("INSERT INTO messages (role, content) VALUES (?, ?)", ("user", user_msg))
@@ -71,6 +73,10 @@ def chat():
     )
     
     bot_msg = response.choices[0].message.content
+    
+    # Add truncation warning if message was cut
+    if truncated:
+        bot_msg = "⚠️ Your message was truncated to 100,000 characters due to length limits.\n\n" + bot_msg
     
     # Auto-detect and wrap code blocks if not already wrapped
     # Look for common code patterns (indented blocks, function definitions, etc.)
