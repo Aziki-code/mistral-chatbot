@@ -27,11 +27,13 @@
             dropdown.appendChild(option);
         });
 
-        // Set default based on backend preference
-        if (window.defaultProvider === 'Mistral AI') {
-            dropdown.value = 'mistral';
-        } else if (window.defaultProvider === 'GitHub Copilot') {
-            dropdown.value = 'github-copilot';
+        // Restore previous selection from localStorage, or default to Mistral AI
+        const savedModel = localStorage.getItem('selectedAIModel');
+        if (savedModel && dropdown.querySelector(`option[value="${savedModel}"]`)) {
+            dropdown.value = savedModel;
+        } else {
+            // Default to Mistral AI if available
+            dropdown.value = window.mistralAvailable ? 'mistral' : (options[0]?.value || 'mistral');
         }
 
         // If only one option, disable dropdown
@@ -71,12 +73,6 @@
         dropdown.addEventListener('change', function() {
             localStorage.setItem('selectedAIModel', this.value);
         });
-
-        // Restore previous selection from localStorage
-        const savedModel = localStorage.getItem('selectedAIModel');
-        if (savedModel && dropdown.querySelector(`option[value="${savedModel}"]`)) {
-            dropdown.value = savedModel;
-        }
     }
 
     // Add CSS animation

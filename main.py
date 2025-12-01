@@ -16,7 +16,6 @@ load_dotenv()
 try:
     bot_manager = get_bot_manager()
 except Exception as e:
-    print(f"❌ Failed to initialize bots: {e}")
     raise
 
 # --- Flask app ---
@@ -138,9 +137,6 @@ def login():
                 return render_template("login.html", error=error_msg)
                 
         except Exception as e:
-            print(f"LDAP Exception: {e}")
-            import traceback
-            traceback.print_exc()
             return render_template("login.html", error=f"LDAP Error: {str(e)}")
     
     return render_template("login.html")

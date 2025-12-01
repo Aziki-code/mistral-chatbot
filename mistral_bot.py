@@ -35,7 +35,6 @@ class MistralBot(BaseBot):
             bool: True if successful, False otherwise
         """
         if not self.api_key:
-            print(f"⚠️  {self.name}: No API key found")
             self._is_available = False
             return False
         
@@ -44,15 +43,11 @@ class MistralBot(BaseBot):
             from mistralai.models.chat_completion import ChatMessage
             self.client = MistralClient(api_key=self.api_key)
             self._is_available = True
-            print(f"✓ {self.name} initialized successfully")
             return True
         except ImportError:
-            print(f"⚠️  {self.name}: mistralai library not installed")
-            print("   Install with: pip install mistralai")
             self._is_available = False
             return False
         except Exception as e:
-            print(f"⚠️  {self.name}: Initialization failed - {e}")
             self._is_available = False
             return False
     
@@ -93,7 +88,6 @@ class MistralBot(BaseBot):
             
         except Exception as e:
             error_msg = f"Error communicating with {self.name}: {str(e)}"
-            print(f"⚠️  {error_msg}")
             return f"❌ {error_msg}"
     
     def get_model_info(self) -> Dict[str, any]:

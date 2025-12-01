@@ -37,17 +37,14 @@ class GitHubCopilotBot(BaseBot):
             bool: True if successful, False otherwise
         """
         if not self.github_token:
-            print(f"⚠️  {self.name}: No GitHub token found")
             self._is_available = False
             return False
         
         try:
             # Validate token by making a test request
             self._is_available = True
-            print(f"✓ {self.name} initialized successfully")
             return True
         except Exception as e:
-            print(f"⚠️  {self.name}: Initialization failed - {e}")
             self._is_available = False
             return False
     
@@ -111,7 +108,6 @@ class GitHubCopilotBot(BaseBot):
             data = response.json()
             return data["choices"][0]["message"]["content"]
         except Exception as e:
-            print(f"   Request to {url} failed: {e}")
             return None
     
     def chat_complete(self, messages: List[Dict[str, str]], model: str = None) -> str:
@@ -141,7 +137,6 @@ class GitHubCopilotBot(BaseBot):
         
         # Failed
         error_msg = f"{self.name} request failed. Check token permissions."
-        print(f"⚠️  {error_msg}")
         return f"❌ {error_msg}"
     
     def get_model_info(self) -> Dict[str, any]:
