@@ -201,10 +201,10 @@ function applyTheme(themeName) {
 function initThemes() {
     const themeDropdown = document.getElementById('theme-dropdown');
     
-    // Load saved theme
-    const savedTheme = localStorage.getItem('chatbot-theme') || 'vscode';
-    themeDropdown.value = savedTheme;
-    applyTheme(savedTheme);
+    // Always reset to Cisco theme on page load (ignore saved theme)
+    const defaultTheme = 'cisco';
+    themeDropdown.value = defaultTheme;
+    applyTheme(defaultTheme);
 
     // Theme change event
     themeDropdown.addEventListener('change', (e) => {

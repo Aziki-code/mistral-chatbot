@@ -13,10 +13,10 @@
     <!-- Prism CSS - Dark Theme -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
     
-    <!-- Custom Styles -->
-    <link rel="stylesheet" href="/static/css/main.css">
+    <!-- Custom Styles with cache busting -->
+    <link rel="stylesheet" href="/static/css/main.css?v=2.2">
     <style id="cisco-prism-theme" disabled>
-        @import url('/static/css/cisco-theme.css');
+        @import url('/static/css/cisco-theme.css?v=2.2');
     </style>
 </head>
 <body>
@@ -24,6 +24,7 @@
 <div id="chat-container">
     <div id="theme-selector">
         <select id="theme-dropdown">
+            <option value="cisco">Cisco</option>
             <option value="vscode">VS Code Dark</option>
             <option value="monokai">Monokai</option>
             <option value="dracula">Dracula</option>
@@ -31,8 +32,8 @@
             <option value="solarized">Solarized Dark</option>
             <option value="quietlight">Quiet Light</option>
             <option value="github">GitHub Dark</option>
-            <option value="cisco">Cisco</option>
         </select>
+        <a href="/logout" id="logout-btn">Logout</a>
     </div>
     <div id="input-panel">
         <div id="pasted-code-header">Pasted Code</div>
@@ -63,13 +64,14 @@
     Prism.plugins.autoloader.languages_path = 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/';
 </script>
 
-<!-- Custom JavaScript Modules -->
-<script src="/static/js/prism-cisco.js"></script>
-<script src="/static/js/code-detector.js"></script>
-<script src="/static/js/message-parser.js"></script>
-<script src="/static/js/themes.js"></script>
-<script src="/static/js/message-handler.js"></script>
-<script src="/static/js/ui-handlers.js"></script>
+<!-- Custom JavaScript Modules with cache busting -->
+<script src="/static/js/prism-cisco.js?v=2.2"></script>
+<script src="/static/js/code-detector.js?v=2.2"></script>
+<script src="/static/js/message-parser.js?v=2.2"></script>
+<script src="/static/js/themes.js?v=2.2"></script>
+<script src="/static/js/message-handler.js?v=2.2"></script>
+<script src="/static/js/ui-handlers.js?v=2.2"></script>
+<script src="/static/js/session-timeout.js?v=2.2"></script>
 
 </body>
 </html>

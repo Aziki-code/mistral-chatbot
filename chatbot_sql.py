@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, redirect, url_for
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
+from flask_ldap3_login import LDAP3LoginManager
+from flask_ldap3_login.forms import LDAPLoginForm
 from dotenv import load_dotenv
 from mistralai import Mistral
 import os
@@ -16,6 +19,55 @@ client = Mistral(api_key=api_key)
 
 # --- Flask app ---
 app = Flask(__name__)
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'change-this-secret-key-in-production')
+
+# --- LDAP Configuration ---
+app.config['LDAP_HOST'] = os.getenv('LDAP_HOST')
+app.config['LDAP_BASE_DN'] = os.getenv('LDAP_BASE_DN')
+app.config['LDAP_USER_DN'] = os.getenv('LDAP_USER_SEARCH_BASE', 'CN=Users,DC=Area51,DC=local')
+app.config['LDAP_GROUP_DN'] = ''
+app.config['LDAP_USER_RDN_ATTR'] = 'cn'  # Changed from sAMAccountName to cn
+app.config['LDAP_USER_LOGIN_ATTR'] = 'sAMAccountName'
+app.config['LDAP_BIND_USER_DN'] = None  # Use direct bind instead of service account
+app.config['LDAP_BIND_USER_PASSWORD'] = None
+app.config['LDAP_USE_SSL'] = True
+app.config['LDAP_BIND_DIRECT_CREDENTIALS'] = True  # Enable direct credential binding
+app.config['LDAP_BIND_DIRECT_SUFFIX'] = ''  # Will use full DN
+app.config['LDAP_BIND_DIRECT_GET_USER_INFO'] = True
+
+# SSL/TLS Configuration - Don't validate certificate for internal AD
+import ssl
+from ldap3 import Tls
+tls_configuration = Tls(validate=ssl.CERT_NONE, version=ssl.PROTOCOL_TLSv1_2)
+app.config['LDAP_TLS_CONFIG'] = tls_configuration
+
+# --- Flask-Login Setup ---
+login_manager = LoginManager(app)
+login_manager.login_view = 'login'
+ldap_manager = LDAP3LoginManager(app)
+
+# User class for Flask-Login
+class User(UserMixin):
+    def __init__(self, dn, username, data):
+        self.dn = dn
+        self.username = username
+        self.data = data
+
+    def __repr__(self):
+        return self.dn
+
+    def get_id(self):
+        return self.dn
+
+@login_manager.user_loader
+def load_user(user_id):
+    # Return a user object based on the user_id (DN)
+    return User(user_id, user_id.split(',')[0].split('=')[1], {})
+
+@ldap_manager.save_user
+def save_user(dn, username, data, memberships):
+    # Create and return user object after successful LDAP authentication
+    return User(dn, username, data)
 
 # --- SQLite setup ---
 db_path = os.path.join(os.path.dirname(__file__), "chat_history.db")
@@ -35,10 +87,66 @@ UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), "static", "uploads")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 @app.route("/")
+@login_required
 def index():
     return render_template("index.html")
 
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
+        
+        # Manual LDAP authentication using ldap3 directly
+        try:
+            from ldap3 import Server, Connection, ALL, Tls
+            import ssl
+            
+            # LDAP server configuration
+            ldap_host = "192.168.0.82"
+            ldap_port = 636
+            base_dn = "DC=Area51,DC=local"
+            
+            # Create TLS configuration
+            tls = Tls(validate=ssl.CERT_NONE, version=ssl.PROTOCOL_TLSv1_2)
+            server = Server(ldap_host, port=ldap_port, use_ssl=True, tls=tls, get_info=ALL)
+            
+            # Try to authenticate user with full DN
+            user_dn = f"CN={username},CN=Users,{base_dn}"
+            
+            try:
+                # Attempt to bind with user credentials
+                conn = Connection(server, user=user_dn, password=password, auto_bind=True)
+                
+                # If we got here, authentication succeeded
+                conn.unbind()
+                
+                # Create user object and log them in
+                user = User(user_dn, username, {})
+                login_user(user)
+                return redirect(url_for('index'))
+                
+            except Exception as bind_error:
+                # Authentication failed
+                error_msg = f"Invalid username or password"
+                return render_template("login.html", error=error_msg)
+                
+        except Exception as e:
+            print(f"LDAP Exception: {e}")
+            import traceback
+            traceback.print_exc()
+            return render_template("login.html", error=f"LDAP Error: {str(e)}")
+    
+    return render_template("login.html")
+
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
+
 @app.route("/chat", methods=["POST"])
+@login_required
 def chat():
     data = request.get_json()
     user_msg = data.get("message", "")
@@ -165,6 +273,7 @@ def chat():
     return jsonify({"response": bot_msg})
 
 @app.route("/upload", methods=["POST"])
+@login_required
 def upload():
     if "screendump" not in request.files:
         return jsonify({"response": "No file uploaded."})
@@ -188,6 +297,7 @@ def upload():
     return jsonify({"response": response_text})
 
 @app.route("/history", methods=["GET"])
+@login_required
 def history():
     cursor.execute("SELECT role, content FROM messages ORDER BY id DESC LIMIT 50")
     history = [{"role": role, "content": content} for role, content in reversed(cursor.fetchall())]
