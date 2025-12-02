@@ -1,0 +1,16 @@
+/* GitHub Dark Theme */
+body[data-theme="github"] {
+    --bg-darkest: #010409;
+    --bg-dark: #0d1117;
+    --bg-medium: #161b22;
+    --border-color: #30363d;
+    --text-primary: #e6edf3;
+    --text-secondary: #8b949e;
+    --accent-primary: #58a6ff;
+    --accent-secondary: #1f6feb;
+    --button-primary: #238636;
+    --button-primary-hover: #2ea043;
+    --button-secondary: #21262d;
+    --scrollbar-thumb: #30363d;
+    --scrollbar-thumb-hover: #484f58;
+}

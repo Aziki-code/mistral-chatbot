@@ -1,0 +1,98 @@
+/* Cisco syntax for Light themes - adjusted colors for light background */
+
+/* Enable mode prompt (#) - Dark Orange */
+code[class*="language-cisco"] .token.prompt-enable,
+pre[class*="language-cisco"] .token.prompt-enable { 
+    color: #cc6600; 
+    font-weight: bold; 
+}
+
+/* User mode prompt (>) - Dark Teal */
+code[class*="language-cisco"] .token.prompt-user,
+pre[class*="language-cisco"] .token.prompt-user { 
+    color: #007766; 
+}
+
+/* Interface keyword and names - Dark Orange */
+code[class*="language-cisco"] .token.interface,
+code[class*="language-cisco"] .token.class-name,
+pre[class*="language-cisco"] .token.interface,
+pre[class*="language-cisco"] .token.class-name { 
+    color: #cc5500; 
+}
+
+/* IP addresses - Dark Green */
+code[class*="language-cisco"] .token.number,
+pre[class*="language-cisco"] .token.number { 
+    color: #008800; 
+}
+
+/* Subnet masks - Olive Green */
+code[class*="language-cisco"] .token.subnet,
+pre[class*="language-cisco"] .token.subnet { 
+    color: #669900; 
+}
+
+/* MAC addresses - Dark Gold */
+code[class*="language-cisco"] .token.builtin,
+pre[class*="language-cisco"] .token.builtin { 
+    color: #996600; 
+}
+
+/* IOS Version - Dark Orange */
+code[class*="language-cisco"] .token.version,
+pre[class*="language-cisco"] .token.version { 
+    color: #cc5500; 
+}
+
+/* Good words (yes, permit, up, running) - Dark Green */
+code[class*="language-cisco"] .token.inserted,
+pre[class*="language-cisco"] .token.inserted { 
+    color: #006600; 
+}
+
+/* Bad words (no, deny, down, shutdown, trunk) - Dark Red */
+code[class*="language-cisco"] .token.deleted,
+code[class*="language-cisco"] .token.keyword.bad,
+pre[class*="language-cisco"] .token.deleted,
+pre[class*="language-cisco"] .token.keyword.bad { 
+    color: #cc0000; 
+}
+
+/* Misc words (class, policy, version, ID) - Brown */
+code[class*="language-cisco"] .token.property,
+pre[class*="language-cisco"] .token.property { 
+    color: #996633; 
+}
+
+/* Important words (erase, delete, confirm) - Dark Red Bold */
+code[class*="language-cisco"] .token.important,
+pre[class*="language-cisco"] .token.important { 
+    color: #cc0000; 
+    font-weight: bold; 
+}
+
+/* Remarks and comments - Dark Green */
+code[class*="language-cisco"] .token.comment,
+pre[class*="language-cisco"] .token.comment { 
+    color: #008800; 
+    font-style: italic;
+}
+
+/* Keywords (interface, switchport, description) - Dark Blue */
+code[class*="language-cisco"] .token.keyword,
+pre[class*="language-cisco"] .token.keyword { 
+    color: #0066cc; 
+}
+
+/* Strings and descriptions - Dark Teal */
+code[class*="language-cisco"] .token.string,
+pre[class*="language-cisco"] .token.string { 
+    color: #006699; 
+}
+
+/* Default Cisco text - Dark Blue */
+code[class*="language-cisco"],
+pre[class*="language-cisco"] {
+    color: #006699;
+}

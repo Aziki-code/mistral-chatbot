@@ -81,22 +81,6 @@ const themes = {
         '--scrollbar-thumb-hover': '#11697a',
         prismTheme: 'solarizedlight'
     },
-    quietlight: {
-        '--bg-darkest': '#f5f5f5',
-        '--bg-dark': '#ffffff',
-        '--bg-medium': '#e8e8e8',
-        '--border-color': '#d4d4d4',
-        '--text-primary': '#333333',
-        '--text-secondary': '#6a737d',
-        '--accent-primary': '#0366d6',
-        '--accent-secondary': '#d73a49',
-        '--button-primary': '#0366d6',
-        '--button-primary-hover': '#0256c7',
-        '--button-secondary': '#28a745',
-        '--scrollbar-thumb': '#c4c4c4',
-        '--scrollbar-thumb-hover': '#a8a8a8',
-        prismTheme: 'default'
-    },
     github: {
         '--bg-darkest': '#0d1117',
         '--bg-dark': '#161b22',
@@ -114,10 +98,10 @@ const themes = {
         prismTheme: 'tomorrow'
     },
     cisco: {
-        '--bg-darkest': '#606060',
-        '--bg-dark': '#606060',
-        '--bg-medium': '#707070',
-        '--border-color': '#808080',
+        '--bg-darkest': '#505050',
+        '--bg-dark': '#505050',
+        '--bg-medium': '#585858',
+        '--border-color': '#707070',
         '--text-primary': '#00ffff',
         '--text-secondary': '#00d7ff',
         '--accent-primary': '#00ffff',
@@ -125,9 +109,43 @@ const themes = {
         '--button-primary': '#006b7a',
         '--button-primary-hover': '#008a9c',
         '--button-secondary': '#00ffff',
-        '--scrollbar-thumb': '#808080',
-        '--scrollbar-thumb-hover': '#909090',
+        '--scrollbar-thumb': '#707070',
+        '--scrollbar-thumb-hover': '#808080',
         prismTheme: 'tomorrow'
+    },
+    light: {
+        '--bg-darkest': '#ffffff',
+        '--bg-dark': '#f5f5f5',
+        '--bg-medium': '#e8e8e8',
+        '--border-color': '#d0d0d0',
+        '--text-primary': '#2c3e50',
+        '--text-secondary': '#7f8c8d',
+        '--accent-primary': '#3498db',
+        '--accent-secondary': '#e74c3c',
+        '--button-primary': '#3498db',
+        '--button-primary-hover': '#2980b9',
+        '--button-secondary': '#2ecc71',
+        '--scrollbar-thumb': '#bdc3c7',
+        '--scrollbar-thumb-hover': '#95a5a6',
+        prismTheme: 'solarizedlight',
+        lightTheme: true
+    },
+    'light-quiet': {
+        '--bg-darkest': '#f5f0f5',
+        '--bg-dark': '#f0e8f0',
+        '--bg-medium': '#e8dce8',
+        '--border-color': '#c8b8c8',
+        '--text-primary': '#4a3a4a',
+        '--text-secondary': '#8b7b9b',
+        '--accent-primary': '#b08bc0',
+        '--accent-secondary': '#d88ba8',
+        '--button-primary': '#b8a8c8',
+        '--button-primary-hover': '#9b8bab',
+        '--button-secondary': '#c8a8d8',
+        '--scrollbar-thumb': '#b4a4c4',
+        '--scrollbar-thumb-hover': '#9688a6',
+        prismTheme: 'quietlight',
+        lightTheme: true
     }
 };
 
@@ -137,10 +155,23 @@ function applyTheme(themeName) {
     
     const root = document.documentElement;
     Object.keys(theme).forEach(key => {
-        if (key !== 'prismTheme') {
+        if (key !== 'prismTheme' && key !== 'lightTheme') {
             root.style.setProperty(key, theme[key]);
         }
     });
+    
+    // Add theme class to body for special styling
+    document.body.className = themeName;
+    
+    // Handle Kali watermark filter for light theme
+    const watermark = document.querySelector('body::before') || document.body;
+    if (theme.lightTheme) {
+        // Light theme: dark gray dragon on white background
+        document.body.setAttribute('data-light-theme', 'true');
+    } else {
+        // Dark theme: keep original filter
+        document.body.removeAttribute('data-light-theme');
+    }
     
     // Update browser theme color for all browsers (Chrome, Edge, Firefox, Safari)
     // Remove old meta tags and create new ones (some browsers don't respect setAttribute)
@@ -171,14 +202,22 @@ function applyTheme(themeName) {
     // Update Prism theme or enable custom Cisco theme
     const prismLink = document.querySelector('link[href*="prism"]');
     const ciscoTheme = document.getElementById('cisco-prism-theme');
+    const quietLightTheme = document.getElementById('quiet-light-prism-theme');
     
     if (themeName === 'cisco' && ciscoTheme) {
         // Enable custom Cisco theme
         if (prismLink) prismLink.disabled = true;
-        ciscoTheme.disabled = false;
+        if (ciscoTheme) ciscoTheme.disabled = false;
+        if (quietLightTheme) quietLightTheme.disabled = true;
+    } else if (themeName === 'light-quiet' && quietLightTheme) {
+        // Enable custom Quiet Light theme
+        if (prismLink) prismLink.disabled = true;
+        if (ciscoTheme) ciscoTheme.disabled = true;
+        if (quietLightTheme) quietLightTheme.disabled = false;
     } else {
         // Use standard Prism theme
         if (ciscoTheme) ciscoTheme.disabled = true;
+        if (quietLightTheme) quietLightTheme.disabled = true;
         if (prismLink) {
             prismLink.disabled = false;
             prismLink.href = `https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-${theme.prismTheme}.min.css`;
@@ -187,12 +226,19 @@ function applyTheme(themeName) {
     
     // Re-highlight all code blocks
     setTimeout(() => {
-        document.querySelectorAll('pre code').forEach(block => {
-            if (typeof Prism !== 'undefined' && Prism.highlightElement) {
-                Prism.highlightElement(block);
-            }
-        });
-    }, 100);
+        if (typeof Prism !== 'undefined') {
+            document.querySelectorAll('pre code').forEach(block => {
+                // Remove existing highlighting
+                block.removeAttribute('class');
+                block.className = block.parentElement.className.replace('line-numbers', '').trim();
+                
+                // Re-highlight
+                if (Prism.highlightElement) {
+                    Prism.highlightElement(block);
+                }
+            });
+        }
+    }, 150);
     
     // Save preference
     localStorage.setItem('chatbot-theme', themeName);

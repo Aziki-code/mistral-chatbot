@@ -1,0 +1,184 @@
+/* Light Theme Specific Styles */
+body.light::before,
+body[data-light-theme="true"]::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('/static/images/kali-layers-light2.jpeg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.5;
+    z-index: 1;
+    pointer-events: none;
+}
+
+body.light,
+body[data-light-theme="true"] {
+    background: #f8f9fa;
+    color: #2c3e50;
+}
+
+body.light #left-panel,
+body[data-light-theme="true"] #left-panel {
+    background: rgba(248, 249, 250, 0.4);
+    border-right: 2px solid rgba(189, 195, 199, 0.3);
+}
+
+body[data-light-theme="true"] .message.user {
+    background: rgba(52, 152, 219, 0.08);
+    color: #2c3e50;
+    border: 1px solid rgba(52, 152, 219, 0.2);
+}
+
+body[data-light-theme="true"] .message.assistant {
+    background: rgba(255, 255, 255, 0.25);
+    color: #2c3e50;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: none;
+}
+
+body[data-light-theme="true"] .codeblock {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-left: 3px solid #5a6268;
+    box-shadow: none !important;
+}
+
+body[data-light-theme="true"] .codeblock pre {
+    color: #2c3e50;
+    box-shadow: none !important;
+}
+
+body[data-light-theme="true"] .codeblock code {
+    box-shadow: none !important;
+}
+
+body[data-light-theme="true"] pre[class*="language-"] {
+    box-shadow: none !important;
+}
+
+body[data-light-theme="true"] #pasted-code-output,
+body[data-light-theme="true"] #code-output {
+    color: #2c3e50;
+}
+
+body[data-light-theme="true"] ::-webkit-scrollbar-thumb {
+    background: rgba(189, 195, 199, 0.6);
+}
+
+body[data-light-theme="true"] ::-webkit-scrollbar-thumb:hover {
+    background: rgba(149, 165, 166, 0.8);
+}
+
+body[data-light-theme="true"] #input {
+    background: rgba(255, 255, 255, 0.9);
+    color: #2c3e50;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+body[data-light-theme="true"] #input::placeholder {
+    color: #95a5a6;
+}
+
+body[data-light-theme="true"] #theme-selector label {
+    color: #2c3e50 !important;
+}
+
+body[data-light-theme="true"] #theme-selector select,
+body[data-light-theme="true"] #ai-model-dropdown {
+    background: rgba(255, 255, 255, 0.95);
+    color: #2c3e50;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+body[data-light-theme="true"] #send {
+    background: #bdc3c7;
+    color: #2c3e50;
+    border: 1px solid #95a5a6;
+}
+
+body[data-light-theme="true"] #send:hover {
+    background: #95a5a6;
+    border-color: #7f8c8d;
+}
+
+body[data-light-theme="true"] #uploadBtn {
+    background: #5a6268;
+    color: white;
+    border: 1px solid #495057;
+}
+
+body[data-light-theme="true"] #uploadBtn:hover {
+    background: #495057;
+    border-color: #343a40;
+}
+
+body[data-light-theme="true"] .copy-btn {
+    background: #5a6268;
+    color: white;
+    border: 1px solid #495057;
+}
+
+body[data-light-theme="true"] .copy-btn:hover {
+    background: #495057;
+    border-color: #343a40;
+}
+
+body[data-light-theme="true"] #logout-btn {
+    background: #5a6268;
+    color: white;
+    border: 1px solid #495057;
+}
+
+body[data-light-theme="true"] #logout-btn:hover {
+    background: #495057;
+    border-color: #343a40;
+}
+
+body[data-light-theme="true"] #pasted-code-header {
+    color: #5a6268;
+}
+
+body[data-light-theme="true"] #code-output-header {
+    color: #5a6268;
+}
+
+body[data-light-theme="true"] .copy-feedback {
+    background: #5a6268;
+    color: white;
+}
+
+body[data-light-theme="true"] .code-indicator {
+    background: #5a6268;
+    color: white;
+    border: 1px solid #495057;
+}
+
+body[data-light-theme="true"] .code-indicator:hover {
+    background: #495057;
+    border-color: #343a40;
+}
+
+/* Ripple glow effect for light theme - gray like cisco */
+@keyframes ripple-light {
+    0% {
+        box-shadow: 0 0 0 0 rgba(90, 98, 104, 0);
+    }
+    50% {
+        box-shadow: 0 0 25px 12px rgba(90, 98, 104, 0.7);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(90, 98, 104, 0);
+    }
+}
+
+body.light .codeblock.highlight,
+body[data-light-theme="true"] .codeblock.highlight {
+    animation: ripple-light 1.5s ease-out;
+    border-color: #5a6268 !important;
+    border-width: 2px !important;
+}

@@ -98,12 +98,78 @@ class MistralBot(BaseBot):
             "default_model": self.default_model,
             "provider": "Mistral AI",
             "icon": "🤖",
-            "supported_models": [
-                "mistral-small-latest",
-                "mistral-medium-latest",
-                "mistral-large-latest"
-            ]
+            "supports_vision": True
         }
+    
+    def analyze_image(self, image_path: str, prompt: str = "What do you see in this image?") -> str:
+        """
+        Analyze an image using Mistral Vision API
+        
+        Args:
+            image_path: Path to image file
+            prompt: Question to ask about the image
+            
+        Returns:
+            str: Analysis result
+        """
+        if not self.is_available:
+            raise RuntimeError(f"{self.name} is not available. Check API key.")
+        
+        try:
+            import base64
+            import requests
+            
+            # Read and encode image to base64
+            with open(image_path, "rb") as image_file:
+                image_data = base64.b64encode(image_file.read()).decode('utf-8')
+            
+            # Determine image format
+            ext = image_path.lower().split('.')[-1]
+            if ext == 'jpg':
+                ext = 'jpeg'
+            mime_type = f"image/{ext}"
+            
+            # Use direct REST API call
+            headers = {
+                "Authorization": f"Bearer {self.api_key}",
+                "Content-Type": "application/json"
+            }
+            
+            payload = {
+                "model": "pixtral-12b-2409",
+                "messages": [
+                    {
+                        "role": "user",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": prompt
+                            },
+                            {
+                                "type": "image_url",
+                                "image_url": f"data:{mime_type};base64,{image_data}"
+                            }
+                        ]
+                    }
+                ]
+            }
+            
+            response = requests.post(
+                "https://api.mistral.ai/v1/chat/completions",
+                headers=headers,
+                json=payload,
+                timeout=60
+            )
+            
+            if response.status_code == 200:
+                result = response.json()
+                return result['choices'][0]['message']['content']
+            else:
+                return f"❌ API Error: {response.status_code} - {response.text}"
+            
+        except Exception as e:
+            error_msg = f"Error analyzing image with {self.name}: {str(e)}"
+            return f"❌ {error_msg}"
     
     def get_display_name(self) -> str:
         """Get display name for UI"""

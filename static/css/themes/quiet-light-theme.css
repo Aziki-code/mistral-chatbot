@@ -1,0 +1,170 @@
+/* Quiet Light Theme - VS Code Quiet Light colors for Python/HTML + Cisco colors for Cisco */
+
+/* Import Cisco light theme for Cisco code */
+@import url('cisco-light-theme.css');
+
+/* Default for all code */
+code[class*="language-"],
+pre[class*="language-"] {
+    color: #333333;
+    background: transparent;
+}
+
+/* ========== VS CODE QUIET LIGHT for Python, HTML, etc ========== */
+
+/* Comments - Darker Green */
+code[class*="language-python"] .token.comment,
+code[class*="language-html"] .token.comment,
+code[class*="language-javascript"] .token.comment,
+code[class*="language-css"] .token.comment,
+code[class*="language-markup"] .token.comment,
+pre[class*="language-python"] .token.comment,
+pre[class*="language-html"] .token.comment,
+pre[class*="language-javascript"] .token.comment,
+pre[class*="language-css"] .token.comment,
+pre[class*="language-markup"] .token.comment {
+    color: #006600;
+    font-style: italic;
+}
+
+/* Keywords - Darker Blue */
+code[class*="language-python"] .token.keyword,
+code[class*="language-html"] .token.keyword,
+code[class*="language-javascript"] .token.keyword,
+code[class*="language-markup"] .token.keyword,
+pre[class*="language-python"] .token.keyword,
+pre[class*="language-html"] .token.keyword,
+pre[class*="language-javascript"] .token.keyword,
+pre[class*="language-markup"] .token.keyword {
+    color: #0000cc;
+    font-weight: normal;
+}
+
+/* Strings - Darker Red/Brown */
+code[class*="language-python"] .token.string,
+code[class*="language-html"] .token.string,
+code[class*="language-javascript"] .token.string,
+code[class*="language-markup"] .token.string,
+pre[class*="language-python"] .token.string,
+pre[class*="language-html"] .token.string,
+pre[class*="language-javascript"] .token.string,
+pre[class*="language-markup"] .token.string {
+    color: #8b0000;
+}
+
+/* Numbers - Darker Teal */
+code[class*="language-python"] .token.number,
+code[class*="language-html"] .token.number,
+code[class*="language-javascript"] .token.number,
+code[class*="language-markup"] .token.number,
+pre[class*="language-python"] .token.number,
+pre[class*="language-html"] .token.number,
+pre[class*="language-javascript"] .token.number,
+pre[class*="language-markup"] .token.number {
+    color: #076d46;
+}
+
+/* Functions - Darker Yellow/Brown */
+code[class*="language-python"] .token.function,
+code[class*="language-html"] .token.function,
+code[class*="language-javascript"] .token.function,
+code[class*="language-markup"] .token.function,
+pre[class*="language-python"] .token.function,
+pre[class*="language-html"] .token.function,
+pre[class*="language-javascript"] .token.function,
+pre[class*="language-markup"] .token.function {
+    color: #5f4c1e;
+}
+
+/* Classes - Darker Teal */
+code[class*="language-python"] .token.class-name,
+code[class*="language-html"] .token.class-name,
+code[class*="language-javascript"] .token.class-name,
+code[class*="language-markup"] .token.class-name,
+pre[class*="language-python"] .token.class-name,
+pre[class*="language-html"] .token.class-name,
+pre[class*="language-javascript"] .token.class-name,
+pre[class*="language-markup"] .token.class-name {
+    color: #1e667a;
+}
+
+/* Operators - Black */
+code[class*="language-python"] .token.operator,
+code[class*="language-html"] .token.operator,
+code[class*="language-javascript"] .token.operator,
+code[class*="language-markup"] .token.operator,
+pre[class*="language-python"] .token.operator,
+pre[class*="language-html"] .token.operator,
+pre[class*="language-javascript"] .token.operator,
+pre[class*="language-markup"] .token.operator {
+    color: #000000;
+}
+
+/* Punctuation - Darker Gray */
+code[class*="language-python"] .token.punctuation,
+code[class*="language-html"] .token.punctuation,
+code[class*="language-javascript"] .token.punctuation,
+code[class*="language-markup"] .token.punctuation,
+pre[class*="language-python"] .token.punctuation,
+pre[class*="language-html"] .token.punctuation,
+pre[class*="language-javascript"] .token.punctuation,
+pre[class*="language-markup"] .token.punctuation {
+    color: #262626;
+}
+
+/* HTML Tags - Darker Maroon */
+/* HTML Tags - Darker Maroon */
+code[class*="language-html"] .token.tag,
+code[class*="language-markup"] .token.tag,
+pre[class*="language-html"] .token.tag,
+pre[class*="language-markup"] .token.tag {
+    color: #660000;
+}
+
+code[class*="language-html"] .token.tag .token.punctuation,
+code[class*="language-markup"] .token.tag .token.punctuation,
+pre[class*="language-html"] .token.tag .token.punctuation,
+pre[class*="language-markup"] .token.tag .token.punctuation {
+    color: #660000;
+}
+
+/* HTML Attributes - Darker Red */
+code[class*="language-html"] .token.attr-name,
+code[class*="language-markup"] .token.attr-name,
+pre[class*="language-html"] .token.attr-name,
+pre[class*="language-markup"] .token.attr-name {
+    color: #cc0000;
+}
+
+/* HTML Attribute Values - Darker Blue */
+code[class*="language-html"] .token.attr-value,
+code[class*="language-markup"] .token.attr-value,
+pre[class*="language-html"] .token.attr-value,
+pre[class*="language-markup"] .token.attr-value {
+    color: #0000cc;
+}
+
+/* HTML Doctype - Darker Gray */
+code[class*="language-html"] .token.doctype,
+code[class*="language-markup"] .token.doctype,
+pre[class*="language-html"] .token.doctype,
+pre[class*="language-markup"] .token.doctype {
+    color: #666666;
+    font-style: italic;
+}
+
+/* Builtins - Darker blue */
+code[class*="language-python"] .token.builtin,
+code[class*="language-javascript"] .token.builtin,
+code[class*="language-markup"] .token.builtin,
+pre[class*="language-python"] .token.builtin,
+pre[class*="language-javascript"] .token.builtin,
+pre[class*="language-markup"] .token.builtin {
+    color: #005a9a;
+}
+
+/* Decorators - Darker Yellow */
+code[class*="language-python"] .token.decorator,
+pre[class*="language-python"] .token.decorator {
+    color: #5f4c1e;
+}

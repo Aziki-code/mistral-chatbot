@@ -3,7 +3,7 @@
 code[class*="language-"],
 pre[class*="language-"] {
     color: #00ffff; /* Cyan default text - matches SecureCRT foreground */
-    background: #606060;
+    background: transparent;
 }
 
 /* Enable mode prompt (#) - Yellow #00ffff00 */

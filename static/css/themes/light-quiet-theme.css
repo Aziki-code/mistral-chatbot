@@ -1,0 +1,181 @@
+/* Light Quiet Theme - Purple and pink tones */
+body[data-theme="light-quiet"]::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('/static/images/kali-layers-quiet2.jpeg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.5;
+    z-index: -1;
+    pointer-events: none;
+}
+
+body[data-theme="light-quiet"] {
+    background: #f5f0f5;
+    color: #4a3a4a;
+}
+
+body[data-theme="light-quiet"] #left-panel {
+    background: rgba(240, 230, 240, 0.4);
+    border-right: 2px solid rgba(150, 120, 150, 0.3);
+}
+
+body[data-theme="light-quiet"] .message.user {
+    background: rgba(180, 140, 200, 0.08);
+    color: #4a3a4a;
+    border: 1px solid rgba(150, 120, 180, 0.2);
+}
+
+body[data-theme="light-quiet"] .message.assistant {
+    background: rgba(255, 240, 245, 0.35);
+    color: #4a3a4a;
+    border: 1px solid rgba(200, 150, 180, 0.15);
+    box-shadow: none;
+}
+
+body[data-theme="light-quiet"] .codeblock {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(139, 123, 155, 0.2);
+    border-left: 3px solid #8b7b9b;
+    box-shadow: none !important;
+}
+
+body[data-theme="light-quiet"] .codeblock pre {
+    color: #4a3a4a;
+    box-shadow: none !important;
+}
+
+body[data-theme="light-quiet"] .codeblock code {
+    box-shadow: none !important;
+}
+
+body[data-theme="light-quiet"] pre[class*="language-"] {
+    box-shadow: none !important;
+}
+
+body[data-theme="light-quiet"] #pasted-code-output,
+body[data-theme="light-quiet"] #code-output {
+    color: #4a3a4a;
+}
+
+body[data-theme="light-quiet"] ::-webkit-scrollbar-thumb {
+    background: rgba(180, 160, 190, 0.5);
+}
+
+body[data-theme="light-quiet"] ::-webkit-scrollbar-thumb:hover {
+    background: rgba(150, 130, 170, 0.7);
+}
+
+body[data-theme="light-quiet"] #input {
+    background: rgba(255, 250, 255, 0.9);
+    color: #4a3a4a;
+    border: 1px solid rgba(150, 120, 150, 0.25);
+}
+
+body[data-theme="light-quiet"] #input::placeholder {
+    color: #9b8b9b;
+}
+
+body[data-theme="light-quiet"] #theme-selector label {
+    color: #4a3a4a !important;
+}
+
+body[data-theme="light-quiet"] #theme-selector select,
+body[data-theme="light-quiet"] #ai-model-dropdown {
+    background: rgba(255, 250, 255, 0.95);
+    color: #4a3a4a;
+    border: 1px solid rgba(150, 120, 150, 0.25);
+}
+
+body[data-theme="light-quiet"] #send {
+    background: #b8a8c8;
+    color: #3a2a3a;
+    border: 1px solid #9b8bab;
+}
+
+body[data-theme="light-quiet"] #send:hover {
+    background: #9b8bab;
+    border-color: #7d6d8d;
+}
+
+body[data-theme="light-quiet"] #uploadBtn {
+    background: #8b7b9b;
+    color: white;
+    border: 1px solid #7d6d8d;
+}
+
+body[data-theme="light-quiet"] #uploadBtn:hover {
+    background: #7d6d8d;
+    border-color: #6d5d7d;
+}
+
+body[data-theme="light-quiet"] .copy-btn {
+    background: #8b7b9b;
+    color: white;
+    border: 1px solid #7d6d8d;
+}
+
+body[data-theme="light-quiet"] .copy-btn:hover {
+    background: #7d6d8d;
+    border-color: #6d5d7d;
+}
+
+body[data-theme="light-quiet"] #logout-btn {
+    background: #8b7b9b;
+    color: white;
+    border: 1px solid #7d6d8d;
+}
+
+body[data-theme="light-quiet"] #logout-btn:hover {
+    background: #7d6d8d;
+    border-color: #6d5d7d;
+}
+
+body[data-theme="light-quiet"] #pasted-code-header {
+    color: #8b7b9b;
+}
+
+body[data-theme="light-quiet"] #code-output-header {
+    color: #8b7b9b;
+}
+
+body[data-theme="light-quiet"] .copy-feedback {
+    background: #8b7b9b;
+    color: white;
+}
+
+body[data-theme="light-quiet"] .code-indicator {
+    background: #8b7b9b;
+    color: white;
+    border: 1px solid #7d6d8d;
+}
+
+body[data-theme="light-quiet"] .code-indicator:hover {
+    background: #7d6d8d;
+    border-color: #6d5d7d;
+}
+
+/* Ripple glow effect for light quiet theme - purple tones */
+@keyframes ripple-quiet {
+    0% {
+        box-shadow: 0 0 0 0 rgba(139, 123, 155, 0);
+    }
+    50% {
+        box-shadow: 0 0 25px 12px rgba(139, 123, 155, 0.7);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(139, 123, 155, 0);
+    }
+}
+
+body.light-quiet .codeblock.highlight,
+body[data-theme="light-quiet"] .codeblock.highlight {
+    animation: ripple-quiet 1.5s ease-out;
+    border-color: #8b7b9b !important;
+    border-width: 2px !important;
+}

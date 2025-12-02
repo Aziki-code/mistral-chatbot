@@ -14,9 +14,12 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
     
     <!-- Custom Styles with cache busting -->
-    <link rel="stylesheet" href="/static/css/main.css?v=2.2">
+    <link rel="stylesheet" href="/static/css/main.css?v=7.2">
     <style id="cisco-prism-theme" disabled>
-        @import url('/static/css/cisco-theme.css?v=2.2');
+        @import url('/static/css/themes/cisco-theme.css?v=7.2');
+    </style>
+    <style id="quiet-light-prism-theme" disabled>
+        @import url('/static/css/themes/quiet-light-theme.css?v=7.2');
     </style>
 </head>
 <body>
@@ -36,8 +39,9 @@
             <option value="dracula">Dracula</option>
             <option value="nord">Nord</option>
             <option value="solarized">Solarized Dark</option>
-            <option value="quietlight">Quiet Light</option>
             <option value="github">GitHub Dark</option>
+            <option value="light">Light Theme</option>
+            <option value="light-quiet">Light Quiet</option>
         </select>
         <a href="/logout" id="logout-btn">Logout</a>
     </div>
@@ -77,14 +81,14 @@
     window.githubAvailable = {{ github_available|lower }};
     window.defaultProvider = "{{ default_provider }}";
 </script>
-<script src="/static/js/prism-cisco.js?v=2.2"></script>
-<script src="/static/js/code-detector.js?v=2.2"></script>
-<script src="/static/js/message-parser.js?v=2.2"></script>
-<script src="/static/js/themes.js?v=2.2"></script>
-<script src="/static/js/message-handler.js?v=2.2"></script>
-<script src="/static/js/ui-handlers.js?v=2.2"></script>
-<script src="/static/js/session-timeout.js?v=2.2"></script>
-<script src="/static/js/ai-selector.js?v=2.2"></script>
+<script src="/static/js/prism-cisco.js?v=7.2"></script>
+<script src="/static/js/code-detector.js?v=7.2"></script>
+<script src="/static/js/message-parser.js?v=7.2"></script>
+<script src="/static/js/themes.js?v=7.2"></script>
+<script src="/static/js/message-handler.js?v=7.2"></script>
+<script src="/static/js/ui-handlers.js?v=7.2"></script>
+<script src="/static/js/session-timeout.js?v=7.2"></script>
+<script src="/static/js/ai-selector.js?v=7.2"></script>
 
 </body>
 </html>

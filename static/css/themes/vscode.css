@@ -1,0 +1,16 @@
+/* VS Code Dark Theme */
+body[data-theme="vscode"] {
+    --bg-darkest: #1e1e1e;
+    --bg-dark: #252526;
+    --bg-medium: #2d2d30;
+    --border-color: #3e3e42;
+    --text-primary: #cccccc;
+    --text-secondary: #6a6a6a;
+    --accent-primary: #4ec9b0;
+    --accent-secondary: #ce9178;
+    --button-primary: #0e639c;
+    --button-primary-hover: #1177bb;
+    --button-secondary: #4ec9b0;
+    --scrollbar-thumb: #424242;
+    --scrollbar-thumb-hover: #4e4e4e;
+}

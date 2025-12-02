@@ -3,15 +3,21 @@ Description=AzikiAI Chatbot Service
 After=network.target
 
 [Service]
-Type=simple
+Type=notify
 User=kasperadm
 WorkingDirectory=/home/kasperadm/projects/AzikiAI-codingbot
 Environment="PATH=/home/kasperadm/projects/AzikiAI-codingbot/venv/bin"
-ExecStart=/home/kasperadm/projects/AzikiAI-codingbot/venv/bin/python main.py
-Restart=always
+ExecStart=/home/kasperadm/projects/AzikiAI-codingbot/venv/bin/gunicorn -c gunicorn_config.py main:app
+Restart=on-failure
 RestartSec=10
 StandardOutput=journal
 StandardError=journal
+TimeoutStartSec=120
+WatchdogSec=30
+
+# Security hardening
+NoNewPrivileges=true
+PrivateTmp=true
 
 [Install]
 WantedBy=multi-user.target

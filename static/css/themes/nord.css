@@ -1,0 +1,16 @@
+/* Nord Theme */
+body[data-theme="nord"] {
+    --bg-darkest: #242933;
+    --bg-dark: #2e3440;
+    --bg-medium: #3b4252;
+    --border-color: #4c566a;
+    --text-primary: #eceff4;
+    --text-secondary: #d8dee9;
+    --accent-primary: #88c0d0;
+    --accent-secondary: #5e81ac;
+    --button-primary: #88c0d0;
+    --button-primary-hover: #a3d4e0;
+    --button-secondary: #81a1c1;
+    --scrollbar-thumb: #4c566a;
+    --scrollbar-thumb-hover: #5e6e86;
+}

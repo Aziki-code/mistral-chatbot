@@ -16,7 +16,7 @@ Enterprise-grade AI coding assistant powered by **GitHub Copilot** or Mistral AI
   - Left: Pasted code preview with real-time syntax detection
   - Center: Chat conversation
   - Right: AI code output with syntax highlighting
-- **Eight professional themes:** Cisco (default), VS Code Dark, Monokai, Dracula, Nord, Solarized Dark, Quiet Light, GitHub Dark
+- **Seven professional themes:** Cisco (default), VS Code Dark, Monokai, Dracula, Nord, Solarized Dark, GitHub Dark
 - Auto-detection for multiple languages (Cisco, HTML, Python, CSS, SQL, JavaScript)
 - Upload and paste images
 - Chat history in SQLite
@@ -34,7 +34,7 @@ source venv/bin/activate
 
 3. Install dependencies:
 ```bash
-pip install flask python-dotenv requests mistralai flask-login flask-ldap3-login ldap3
+pip install -r requirements.txt
 ```
 
 4. Create `.env` file with your configuration:
@@ -70,19 +70,30 @@ openssl req -x509 -newkey rsa:4096 -nodes -out cert.pem -keyout key.pem -days 36
 
 ## Running
 
-### Quick start (Linux):
+### Production (Recommended):
+```bash
+# Install service
+sudo cp azikiai-chatbot.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable azikiai-chatbot
+sudo systemctl start azikiai-chatbot
+
+# Check status
+sudo systemctl status azikiai-chatbot
+```
+
+### Development:
+```bash
+# Using Gunicorn
+gunicorn -c gunicorn_config.py main:app
+
+# Or Flask development server
+python main.py
+```
+
+### Quick start script:
 ```bash
 ./start.sh
-```
-
-### As systemd service:
-```bash
-sudo systemctl start mistral-chatbot
-```
-
-### Direct:
-```bash
-python main.py
 ```
 
 Access at: `https://localhost:5000` or `https://[your-pi-ip]:5000`
@@ -116,15 +127,19 @@ After logging in, you'll see an **AI Model** dropdown in the top-left corner:
 - All routes require authentication except login page
 
 ## Structure
-- `main.py` - Flask server with GitHub Copilot/Mistral AI integration, LDAP authentication, and message truncation
+- `main.py` - Flask server with GitHub Copilot/Mistral AI integration, LDAP auth, rate limiting, and logging
 - `bot_manager.py` - Central bot manager that orchestrates all AI bots
 - `mistral_bot.py` - Mistral AI bot implementation
 - `github_copilot_bot.py` - GitHub Copilot bot implementation
 - `base_bot.py` - Abstract base class for all bots
+- `gunicorn_config.py` - Production WSGI server configuration
+- `azikiai-chatbot.service` - Systemd service file
 - `templates/index.html` - Main chatbot interface with three-panel layout
 - `templates/login.html` - LDAP login page
-- `static/js/session-timeout.js` - Auto-logout after inactivity
+- `static/js/` - JavaScript modules (themes, session timeout, AI selector, etc.)
+- `static/css/` - Stylesheets including Cisco theme
 - `static/uploads/` - Uploaded images
+- `logs/` - Application and Gunicorn logs
 - `chat_history.db` - SQLite database (auto-generated)
 
 ## Cisco Syntax Highlighting
@@ -141,8 +156,11 @@ Based on SecureCRT color scheme for accurate network engineer experience.
 
 ## Security
 - LDAP/Active Directory authentication required for all access
-- Session management with automatic timeout (10 minutes)
+- Session management with automatic timeout (configurable, default 10 minutes)
+- Rate limiting: 30 requests/minute per user on chat endpoint
 - `.env` file contains API key and secrets - NOT uploaded to GitHub
 - SSL/TLS certificates are NOT uploaded to GitHub
 - Chat history is NOT uploaded to GitHub
-- Certificate validation disabled for internal AD (configure for production)
+- Certificate validation configurable via `LDAP_VALIDATE_SSL` (disabled by default for internal AD)
+- Structured logging for security auditing
+- Production-ready with Gunicorn WSGI server

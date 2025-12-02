@@ -1,0 +1,16 @@
+/* Solarized Dark Theme */
+body[data-theme="solarized"] {
+    --bg-darkest: #001f27;
+    --bg-dark: #002b36;
+    --bg-medium: #073642;
+    --border-color: #586e75;
+    --text-primary: #839496;
+    --text-secondary: #657b83;
+    --accent-primary: #268bd2;
+    --accent-secondary: #2aa198;
+    --button-primary: #268bd2;
+    --button-primary-hover: #3fa3e8;
+    --button-secondary: #859900;
+    --scrollbar-thumb: #586e75;
+    --scrollbar-thumb-hover: #6c7e85;
+}

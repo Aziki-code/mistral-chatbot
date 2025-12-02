@@ -1,60 +1,60 @@
 # GitHub Copilot Integration Guide
 
-## Sådan får du din GitHub Token
+## How to Get Your GitHub Token
 
-### Trin 1: Gå til GitHub Settings
-1. Log ind på [GitHub](https://github.com)
-2. Klik på dit profilbillede øverst til højre
-3. Vælg **Settings**
-4. Scroll ned i venstre sidebar og klik på **Developer settings**
-5. Klik på **Personal access tokens** → **Tokens (classic)**
+### Step 1: Go to GitHub Settings
+1. Log in to [GitHub](https://github.com)
+2. Click on your profile picture in the top right
+3. Select **Settings**
+4. Scroll down in the left sidebar and click on **Developer settings**
+5. Click on **Personal access tokens** → **Tokens (classic)**
 
-### Trin 2: Opret nyt token
-1. Klik på **Generate new token** → **Generate new token (classic)**
-2. Giv dit token et beskrivende navn, f.eks. "AzikiAI Chatbot"
-3. Vælg en udløbsdato (anbefalet: 90 dage eller No expiration for test)
-4. Vælg følgende scopes:
-   - ✅ `read:user` - Læs brugerdata
-   - ✅ `copilot` - Adgang til GitHub Copilot (hvis tilgængelig)
+### Step 2: Create New Token
+1. Click **Generate new token** → **Generate new token (classic)**
+2. Give your token a descriptive name, e.g., "AzikiAI Chatbot"
+3. Choose an expiration date (recommended: 90 days or No expiration for testing)
+4. Select the following scopes:
+   - ✅ `read:user` - Read user data
+   - ✅ `copilot` - Access to GitHub Copilot (if available)
    
-5. Klik på **Generate token** nederst
+5. Click **Generate token** at the bottom
 
-### Trin 3: Kopier token
-1. **VIGTIGT:** Kopier token'et NU - du kan ikke se det igen!
-2. Token'et ser sådan ud: `ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
+### Step 3: Copy Token
+1. **IMPORTANT:** Copy the token NOW - you won't be able to see it again!
+2. The token looks like this: `ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
 
-### Trin 4: Tilføj til .env filen
-1. Åbn/opret `.env` filen i projektets rodmappe
-2. Tilføj linjen:
+### Step 4: Add to .env File
+1. Open/create the `.env` file in the project root directory
+2. Add the line:
    ```
    GITHUB_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
    ```
-   (erstatt med dit faktiske token)
+   (replace with your actual token)
 
 ### Alternative: GitHub Models API
-Hvis du ikke har adgang til Copilot API, kan du også bruge GitHub Models:
-- Samme token fungerer
-- Chatbotten vil automatisk vælge den rigtige endpoint
-- Gratis adgang til GPT-4o og andre modeller
+If you don't have access to the Copilot API, you can also use GitHub Models:
+- Same token works
+- The chatbot will automatically select the correct endpoint
+- Free access to GPT-4o and other models
 
-### Fejlfinding
+### Troubleshooting
 **Problem:** "GITHUB_TOKEN not found"
-- Løsning: Sørg for at `.env` filen er i samme mappe som `chatbot_sql.py`
+- Solution: Make sure the `.env` file is in the same directory as `main.py`
 
 **Problem:** "Error communicating with GitHub API"
-- Løsning 1: Tjek at dit token har de rette scopes
-- Løsning 2: Tjek at dit token ikke er udløbet
-- Løsning 3: Brug Mistral AI som fallback (tilføj MISTRAL_API_KEY til .env)
+- Solution 1: Check that your token has the correct scopes
+- Solution 2: Check that your token hasn't expired
+- Solution 3: Use Mistral AI as fallback (add MISTRAL_API_KEY to .env)
 
-## Fordele ved GitHub Copilot
-- ✅ Bruger dine eksisterende GitHub credentials
-- ✅ Kraftfuld GPT-4 baseret AI
-- ✅ Optimeret til kodning og programmering
-- ✅ Sikker og enterprise-ready
-- ✅ Automatisk fallback til Mistral AI hvis GitHub ikke er tilgængelig
+## Advantages of GitHub Copilot
+- ✅ Uses your existing GitHub credentials
+- ✅ Powerful GPT-4 based AI
+- ✅ Optimized for coding and programming
+- ✅ Secure and enterprise-ready
+- ✅ Automatic fallback to Mistral AI if GitHub is unavailable
 
-## Sikkerhed
-- 🔒 Gem ALDRIG dit token i git repositories
-- 🔒 `.env` filen er allerede i `.gitignore`
-- 🔒 Rotér tokens regelmæssigt (hver 90 dag)
-- 🔒 Brug kun minimal scopes der er nødvendige
+## Security
+- 🔒 NEVER save your token in git repositories
+- 🔒 The `.env` file is already in `.gitignore`
+- 🔒 Rotate tokens regularly (every 90 days)
+- 🔒 Use only minimal scopes that are necessary

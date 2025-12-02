@@ -7,36 +7,60 @@ The chatbot code has been refactored from a single 1267-line monolithic file int
 
 ```
 templates/
-  index.html (75 lines - main HTML structure)
-  index_monolith.html.backup (1267 lines - original version)
+  index.html (main HTML structure)
+  login.html (authentication page)
 
 static/
   css/
-    main.css (363 lines - main styles and layout)
-    cisco-theme.css (110 lines - Cisco SecureCRT colors)
+    main.css (imports only - 24 lines)
+    base.css (common styles - 476 lines)
+    themes/
+      cisco.css (Cisco SecureCRT theme with orange user styling)
+      vscode.css (VS Code theme)
+      monokai.css (Monokai theme)
+      dracula.css (Dracula theme)
+      nord.css (Nord theme)
+      solarized.css (Solarized theme)
+      github.css (GitHub theme)
+      light-theme.css (Light theme with gray glow)
+      light-quiet-theme.css (Light Quiet theme with purple glow)
   
   js/
-    prism-cisco.js (123 lines - Cisco IOS language definition)
-    themes.js (246 lines - theme management and switching)
-    code-detector.js (116 lines - language detection utilities)
-    message-parser.js (63 lines - message parsing logic)
-    message-handler.js (294 lines - message display and API calls)
-    ui-handlers.js (98 lines - event handlers and initialization)
+    prism-cisco.js (Cisco IOS language definition)
+    themes.js (theme management and switching - 9 themes)
+    code-detector.js (language detection utilities)
+    message-parser.js (message parsing logic)
+    message-handler.js (message display, API calls, clickable code blocks)
+    ui-handlers.js (event handlers and initialization)
+    session-timeout.js (auto-logout timer)
+  
+  images/
+    kali-layers.png (watermark for dark themes)
+    kali-layers-light2.jpeg (watermark for light theme)
+    kali-layers-quiet2.jpeg (watermark for light-quiet theme)
+  
+  uploads/
+    .gitkeep (ensures directory exists in git)
 ```
 
 ## Module Responsibilities
 
 ### CSS Modules
-- **main.css**: All layout, colors, panels, buttons, scrollbars
-- **cisco-theme.css**: SecureCRT exact color matching for Cisco syntax
+- **main.css**: Import manager for all CSS files
+- **base.css**: Common styles, layout, watermark system, animations
+- **themes/*.css**: Individual theme files (9 total) with custom colors, glows, and styling
+  - Dark themes: cyan glow effect with kali-layers.png watermark
+  - Light themes: gray/purple glow with custom watermarks
+  - Cisco theme: orange user styling with orange glow effect
 
 ### JavaScript Modules
 - **prism-cisco.js**: Cisco IOS language definition for Prism.js
-- **themes.js**: Theme definitions (8 themes), applyTheme(), initThemes()
-- **code-detector.js**: Language detection (Cisco, HTML, CSS, Python, SQL)
+- **themes.js**: Theme definitions (9 themes), applyTheme(), initThemes()
+- **code-detector.js**: Language detection (Cisco, HTML, CSS, Python, SQL, etc.)
 - **message-parser.js**: Parse messages with code fences (```), escape HTML
-- **message-handler.js**: appendMessage(), sendMessage(), uploadScreenshotFile(), addPastedCode()
+- **message-handler.js**: appendMessage(), sendMessage(), uploadScreenshotFile(), addPastedCode(), clickable code block indicators with scroll and glow effects
 - **ui-handlers.js**: Event listeners, DOM initialization, window resize handler
+- **session-timeout.js**: Auto-logout after 30 minutes of inactivity
 
 ## Load Order (Important!)
 Scripts must load in this order (dependencies):

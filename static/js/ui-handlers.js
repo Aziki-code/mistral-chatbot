@@ -12,6 +12,21 @@ function initializeUI() {
 
     // Initialize themes
     initThemes();
+    
+    // Scroll chat to bottom on load - multiple attempts to ensure it works
+    const scrollToBottom = () => {
+        if (chat) {
+            chat.scrollTop = chat.scrollHeight;
+        }
+    };
+    
+    // Immediate scroll
+    scrollToBottom();
+    
+    // Delayed scrolls to handle async content
+    setTimeout(scrollToBottom, 50);
+    setTimeout(scrollToBottom, 200);
+    setTimeout(scrollToBottom, 500);
 
     // Send button click
     send.onclick = sendMessage;
@@ -29,26 +44,30 @@ function initializeUI() {
         if (upload.files.length) uploadScreenshotFile(upload.files[0]);
     };
 
-    // Input listener for pasted code detection
+    // Input listener for pasted code detection - only for preview
+    let lastPreviewedCode = '';
     input.addEventListener('input', e => {
         const value = e.target.value.trim();
         if (value.length > 20) { // Only show if more than 20 chars
             const detectedLang = detectLanguage(value);
             
             // Only show pasted code panel if actual code was detected
-            if (detectedLang) {
-                pastedCodeOutput.innerHTML = '';
-                pastedCodeCounter = 1;
-                addPastedCode(value, detectedLang, pastedCodeCounter);
+            if (detectedLang && value !== lastPreviewedCode) {
+                // Show live preview of what will be pasted (doesn't affect counter)
+                lastPreviewedCode = value;
                 document.getElementById('input-panel').classList.add('visible');
-            } else {
-                // Not code, hide panel
-                pastedCodeOutput.innerHTML = '';
-                document.getElementById('input-panel').classList.remove('visible');
+            } else if (!detectedLang) {
+                // Not code
+                lastPreviewedCode = '';
+                if (pastedCodeCounter === 0) {
+                    document.getElementById('input-panel').classList.remove('visible');
+                }
             }
         } else if (value.length === 0) {
-            pastedCodeOutput.innerHTML = '';
-            document.getElementById('input-panel').classList.remove('visible');
+            lastPreviewedCode = '';
+            if (pastedCodeCounter === 0) {
+                document.getElementById('input-panel').classList.remove('visible');
+            }
         }
     });
 

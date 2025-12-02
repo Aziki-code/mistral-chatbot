@@ -4,6 +4,7 @@
 # Core Web Framework
 flask==2.3.3
 werkzeug==2.3.7
+flask-limiter==3.5.0
 
 # Environment & Configuration
 python-dotenv==1.0.0

@@ -1,0 +1,60 @@
+/* Cisco Theme - Original SecureCRT colors */
+body[data-theme="cisco"],
+body.cisco {
+    --bg-darkest: #505050;
+    --bg-dark: #505050;
+    --bg-medium: #585858;
+    --border-color: #707070;
+    --text-primary: #00ffff;
+    --text-secondary: #00d7ff;
+    --accent-primary: #00ffff;
+    --accent-secondary: #00d7ff;
+    --button-primary: #006b7a;
+    --button-primary-hover: #008a9c;
+    --button-secondary: #00ffff;
+    --scrollbar-thumb: #707070;
+    --scrollbar-thumb-hover: #808080;
+}
+
+/* Orange text and styling for user messages in Cisco theme */
+body.cisco .message.user,
+body.cisco .message.user * {
+    color: #ffaa33 !important;
+}
+
+/* Orange border and dark gray background for user message bubbles */
+body.cisco .message.user {
+    border-left-color: #ffaa33 !important;
+    background: rgba(80, 80, 80, 0.4) !important;
+}
+
+/* Orange code indicator button for user messages */
+body.cisco .message.user .code-indicator {
+    background: #ff6600 !important;
+    color: white !important;
+}
+
+body.cisco .message.user .code-indicator:hover {
+    background: #ff8800 !important;
+}
+
+/* Orange glow effect for pasted code blocks (left panel - user input) */
+body.cisco #pasted-code-output .codeblock.highlight {
+    border-color: #ffaa33 !important;
+}
+
+body.cisco #pasted-code-output .codeblock.highlight {
+    animation: ripple-orange 1s ease-out !important;
+}
+
+@keyframes ripple-orange {
+    0% {
+        box-shadow: 0 0 0 0 #ffaa33;
+    }
+    50% {
+        box-shadow: 0 0 20px 10px #ffaa33;
+    }
+    100% {
+        box-shadow: 0 0 0 0 #ffaa33;
+    }
+}
